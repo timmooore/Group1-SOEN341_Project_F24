@@ -1,2 +1,3 @@
 Hey guys, this is Group 1's SOEN 341 Project.
-Hey guys, I'm modified this.
+Hey guys, I'm modified this. Cool. 
+CHECK OUT THIS CHANGE.
