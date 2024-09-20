@@ -1,0 +1,26 @@
+{
+  "name": "group1-soen341_project_f24",
+  "version": "1.0.0",
+  "description": "Hey guys, this is Group 1's SOEN 341 Project.\r Hey guys, I'm modified this. Cool. \r CHECK OUT THIS CHANGE.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/SacciadisG/Group1-SOEN341_Project_F24.git"
+  },
+  "author": "SOEN 341 - Group 1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SacciadisG/Group1-SOEN341_Project_F24/issues"
+  },
+  "homepage": "https://github.com/SacciadisG/Group1-SOEN341_Project_F24#readme",
+  "dependencies": {
+    "ejs-mate": "^4.0.0",
+    "express": "^4.21.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.6.3",
+    "path": "^0.12.7"
+  }
+}
