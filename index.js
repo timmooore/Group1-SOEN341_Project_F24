@@ -7,6 +7,9 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const app = express();
 
+// serve static files from public directory
+app.use(express.static('public'));
+
 //Models
 const User = require('./models/user');
 
