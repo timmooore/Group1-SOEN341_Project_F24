@@ -8,8 +8,12 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const app = express(); 
 
-//Models
+//MODELS
 const User = require('./models/user');
+
+//MIDDLEWARE
+//TO BE MODIFIED
+const { isLoggedIn } = require('./middleware');
 
 //Connect to mongoose
 mongoose.connect('mongodb://localhost:27017/soen341project');
@@ -24,15 +28,26 @@ db.once("open", () => { //Listens for "Open" event, i.e. an established connecti
 
 //Remember to npm install path and ejs and ejs mate for this
 app.engine('ejs', ejsMate); //Use ejsMate instead of default express engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')) 
+app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname, 'views'))
 
-//This helps with parsing URL data - good to include for our forms
-
-//Fix this session with sessionConfig - TO DO LATER**
-app.use(session({secret : 'soen341'})); //Sessions provide statefullness & will help keep users logged in / logged out
 app.use(express.urlencoded({ extended: true })); //Helps with parsing the request body
 app.use(methodOverride('_method')); //This helps with changing/naming the HTTP Requests
+
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+
+
+app.use(session(sessionConfig));
+//Flash to be installed, later
 
 app.use(passport.initialize());
 app.use(passport.session()); //Be sure to 'use' this after we use 'session'
@@ -41,6 +56,8 @@ passport.serializeUser(User.serializeUser()); //How to store a user in the sessi
 passport.deserializeUser(User.deserializeUser()); //How to remove a user from a session i.e. log them out
 
 //ROUTES
+//Note: Will move these into separate route folders, eventually*
+
 app.get('/', (req, res) => {
     res.render('index')
 })
@@ -60,17 +77,23 @@ app.post('/register', async (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login')
 })
-app.post('/login', (req, res) => {
+app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req, res) => {
     res.redirect('/secret');
 })
 
-app.post('/logout', (req, res) => {
-    //Changing this to implement passport
-    res.redirect('/login');
-})
+//Passport logout requires a callback function, so it has a bit more code
+app.get('/logout', (req, res, next) => {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        //Implement Flash here, later*
+        res.redirect('/login');
+    });
+});
 
 app.get('/secret', (req, res) => {
-    res.render('secret')
+    res.render('secret');
 })
 
 app.listen(3000, () => {
