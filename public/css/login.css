@@ -10,7 +10,6 @@ form {
     width: 200px;
     border-radius: 10px;
     text-align: center;
-
 }
 
 h1 {
@@ -18,7 +17,6 @@ h1 {
 }
 
 label {
-
     font-size: 15px;
     color: black;
     margin-bottom: 10px;
@@ -33,5 +31,70 @@ input {
 button {
     margin-top: 10px;
     cursor: pointer;
-
 }
+
+.collapsible {
+    max-width: 400px;
+    overflow: hidden;
+    font-weight: 500;
+}
+
+.collapsible input{
+    display: none;
+}
+
+.collapsible label{
+    position: relative;
+    font-weight: 600;
+    margin-bottom: 10px;
+    cursor : pointer;
+    display: block;
+    padding: 15px;
+    z-index: 1;
+}
+
+.collapsible label:after{
+    content: "";
+    position: absolute;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+#arrow-icon{
+    transition: all 0.3s ease;
+}
+
+.collapsible input:checked + label #arrow-icon{
+    transform: rotate(90deg);
+}
+
+.collapsible-form label{
+    cursor: default;
+    font-weight: normal;
+}
+
+.collapsible-form{
+    max-height: 0;
+    overflow: hidden;
+    line-height: 0.4;
+    transition: all 0.3s ease, opacity 0.3s ease;
+}
+
+.collapsible input:checked ~ .collapsible-form {
+    max-height: 500px;
+    padding-bottom: 20px;
+    opacity: 1;
+}
+
+.collapsible-form form {
+    padding: 20px;
+    overflow: visible;
+}
+
+.collapsible-form input{
+    display: block;
+}
+
+
+
+
