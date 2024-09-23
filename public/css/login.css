@@ -1,6 +1,11 @@
 body {
+    width: 600px;
     font-family: Arial, sans-serif;
+    padding: 0 20px 20px 20px;
+    margin: 0 auto;
     background: #f4f4f4;
+    display: block;
+
 }
 
 form {
@@ -13,7 +18,9 @@ form {
 }
 
 h1 {
-    padding: 20px;
+    padding: 20px 0;
+    margin: 0;
+
 }
 
 label {
@@ -33,6 +40,10 @@ button {
     cursor: pointer;
 }
 
+.wrapper{
+    padding-left: 240px;
+}
+
 .collapsible {
     max-width: 400px;
     overflow: hidden;
@@ -47,6 +58,7 @@ button {
     position: relative;
     font-weight: 600;
     margin-bottom: 10px;
+    margin-left: 50px;
     cursor : pointer;
     display: block;
     padding: 15px;
@@ -71,6 +83,9 @@ button {
 .collapsible-form label{
     cursor: default;
     font-weight: normal;
+    display: block;
+    padding: 0;
+    margin-left: 0;
 }
 
 .collapsible-form{
