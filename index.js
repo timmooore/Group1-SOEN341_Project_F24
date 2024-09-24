@@ -74,7 +74,7 @@ app.use((req, res, next) => {
 //ROUTES
 //Note: Will move these into separate route folders, eventually*
 
-app.get('/', (req, res) => {
+app.get('/', isLoggedIn, (req, res) => {
     res.render('index')
 })
 
@@ -101,7 +101,7 @@ app.get('/login', (req, res) => {
 })
 app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
     //Login fix
-    res.redirect('/secret');
+    res.redirect('/');
 })
 
 //Passport logout requires a callback function, so it has a bit more code
@@ -113,10 +113,6 @@ app.post('/logout', (req, res, next) => {
         res.redirect('/login');
     });
 });
-
-app.get('/secret', isLoggedIn, (req, res) => {
-    res.render('secret');
-})
 
 app.listen(3000, () => {
     console.log("SERVING YOUR APP!")
