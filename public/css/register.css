@@ -1,6 +1,11 @@
 body {
+    width: 600px;
     font-family: Arial, sans-serif;
+    margin: 0 auto;
     background: #f4f4f4;
+    display: block;
+    justify-content: center;
+
 }
 
 form {
@@ -14,7 +19,9 @@ form {
 }
 
 h1 {
-    padding: 20px;
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 label {
