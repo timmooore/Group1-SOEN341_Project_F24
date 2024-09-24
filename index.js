@@ -3,18 +3,22 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
-const bcrypt = require('bcrypt');
 const session = require('express-session');
-const app = express();
+const flash = require('connect-flash'); //Will use this later, but we haven't set much up yet 
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const app = express(); 
 
-// serve static files from public directory
+//MODELS
+//Serves static files from 'public' directory
 app.use(express.static('public'));
 
 //Models
 const User = require('./models/user');
 
-
-
+//MIDDLEWARE
+//TO BE MODIFIED
+const { isLoggedIn } = require('./middleware');
 
 //Connect to mongoose
 mongoose.connect('mongodb://localhost:27017/soen341project');
@@ -29,77 +33,87 @@ db.once("open", () => { //Listens for "Open" event, i.e. an established connecti
 
 //Remember to npm install path and ejs and ejs mate for this
 app.engine('ejs', ejsMate); //Use ejsMate instead of default express engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')) 
+app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname, 'views'))
 
-//This helps with parsing URL data - good to include for our forms
-//Parses the request body
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); //Helps with parsing the request body
+app.use(methodOverride('_method')); //This helps with changing/naming the HTTP Requests
 
-//Sessions provide statefullness & will help keep users logged in / logged out
-app.use(session({secret : 'soen341'}));
-//Remember to npm install method-override for this
-//This helps with changing/naming the HTTP Requests
-app.use(methodOverride('_method'));
+const sessionConfig = {
+    secret: 'soen341',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+
+
+app.use(session(sessionConfig));
+//app.use(flash()); //Need to set this up
+
+app.use(passport.initialize());
+app.use(passport.session()); //Be sure to 'use' this after we use 'session'
+passport.use(new LocalStrategy(User.authenticate())); //Telling passport to use the passport-given authentication method for our User model
+
+passport.serializeUser(User.serializeUser()); //How to store a user in the session i.e. log them in & keep them logged in
+passport.deserializeUser(User.deserializeUser()); //How to remove a user from a session i.e. log them out
+
+//Middleware that'll execute on every request to the server
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user; //Has user info in the req session - Important !
+    /* Setting this up, later, once we're more ahead.
+    res.locals.success = req.flash('success'); //Flashes a message if the req succeeds (The specific messages are set up in the routes)
+    res.locals.error = req.flash('error'); //Flashes a message if the req fails (The specific messages are set up in the routes)
+    */ 
+    next();
+})
 
 //ROUTES
-/* Note: Post routes are disabled until I get the basic functionality to work. 
-Pushing & Committing so we can all have access to the html pages */
+//Note: Will move these into separate route folders, eventually*
 
-//Home Route - Currently routes you to the Login page
-//Will change this soon **
-app.get('/', (req, res) => {
-    if(!req.session.user_id) {
-        console.log("This user isn't logged in, so let's redirect them") //For bug testing, will delete later.
-        res.render('login');
-    }
-    else {
-        res.redirect('/');
-    }
+app.get('/', isLoggedIn, (req, res) => {
+    res.render('index')
 })
 
-//Login Route
-app.get('/login', (req, res) => {
-    res.render('login');
-})
-
-/*
-app.post('/login', async    (req, res) => {
-    const { username, password } = req.body;
-    const user = User.findOne({ username });
-    const validPassword = await bcrypt.compare(password, user.password);
-    //If user not found and/or password doesn't match
-    if(validPassword) {
-        req.session.user_id = user._id;
-        res.redirect('/');
-    }
-    else {
-        res.redirect('login');
-    }
-})
-*/
-
-//Register Routes
 app.get('/register', (req, res) => {
     res.render('register')
 })
 
-/*
-app.post('/register', async(req, res) => {
-    const { username, password } = req.body;
-    const hash = await bcrypt.hash(password, 12);
-    const user = new User({
-        username,
-        password: hash
-    })
-    await user.save();
-    //Change the redirect once we have a better route **
-    req.session.user_id = user._id;
-    res.redirect('/'); 
+app.post('/register', async (req, res) => {
+    try {
+        const { username, password, user_type } = req.body;
+        const user = new User({ username, user_type });
+        const registeredUser = await User.register(user, password);
+        req.login(registeredUser, err => {
+            if(err) return next(err);
+            res.redirect('/secret');
+        })
+    } catch(e) {
+        res.redirect('register');
+    }
 })
-*/
 
-//Runs server on port 3000
+app.get('/login', (req, res) => {
+    res.render('login')
+})
+app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
+    //Login fix
+    res.redirect('/');
+})
+
+//Passport logout requires a callback function, so it has a bit more code
+app.post('/logout', (req, res, next) => {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/login');
+    });
+});
+
 app.listen(3000, () => {
-    console.log("APP IS LISTENING ON PORT 3000!")
+    console.log("SERVING YOUR APP!")
 })
