@@ -15,6 +15,7 @@ app.use(express.static('public'));
 
 //Models
 const User = require('./models/user');
+const Team = require('./models/team');
 
 //MIDDLEWARE
 //TO BE MODIFIED
@@ -113,6 +114,20 @@ app.post('/logout', (req, res, next) => {
         res.redirect('/login');
     });
 });
+
+//Test route for the user id with passport
+app.post('/test', isLoggedIn, async (req, res) => {
+    try {
+    const testUser = await User.findById(req.user._id);
+    console.log(testUser);
+    console.log(testUser._id);
+    console.log(testUser.username);
+    console.log(testUser.user_type);
+    } catch(e) {
+    console.log("Almost exploded lol");
+    }
+res.redirect('/');
+})
 
 app.listen(3000, () => {
     console.log("SERVING YOUR APP!")
