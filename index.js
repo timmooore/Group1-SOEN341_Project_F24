@@ -10,6 +10,10 @@ const LocalStrategy = require('passport-local');
 const app = express(); 
 
 //MODELS
+//Serves static files from 'public' directory
+app.use(express.static('public'));
+
+//Models
 const User = require('./models/user');
 
 //MIDDLEWARE
