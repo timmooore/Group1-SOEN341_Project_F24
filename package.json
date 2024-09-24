@@ -18,6 +18,7 @@
   "homepage": "https://github.com/SacciadisG/Group1-SOEN341_Project_F24#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "connect-flash": "^0.1.1",
     "ejs-mate": "^4.0.0",
     "express": "^4.21.0",
     "express-session": "^1.18.0",
