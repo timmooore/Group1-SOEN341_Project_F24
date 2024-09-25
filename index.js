@@ -10,6 +10,7 @@ const LocalStrategy = require('passport-local');
 const app = express(); 
 
 //MODELS
+
 //Serves static files from 'public' directory
 app.use(express.static('public'));
 
@@ -82,6 +83,7 @@ app.get('/register', (req, res) => {
     res.render('register')
 })
 
+
 app.post('/register', async (req, res) => {
     try {
         const { username, password, user_type } = req.body;
@@ -89,7 +91,7 @@ app.post('/register', async (req, res) => {
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if(err) return next(err);
-            res.redirect('/secret');
+            res.redirect('/');
         })
     } catch(e) {
         res.redirect('register');

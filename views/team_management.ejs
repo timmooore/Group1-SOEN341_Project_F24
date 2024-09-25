@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/team_management.css">
+    <title>Team management</title>
+</head>
+<body>
+
+<header>
+    <img src="/Assets/concordia logo.png" alt="Concordia Logo">
+    <h1>Team management</h1>
+</header>
+
+<nav>
+    <a href="generate_teams.ejs">Generate Teams</a>
+    <a href="manage_teams.ejs">Manage Teams</a>
+</nav>
+
+<section>
+    <h2>Course Roster</h2>
+    <h3>Total students: 4</h3> <!-- need to make student count dynamic -->
+
+    <!-- This is just an example with a couple of names.
+        We have to link users with the database -->
+    <table class="student-table">
+        <thead>
+        <tr>
+            <th>First name / Last name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><div class="student-info"> Logan Thomas </div></td>
+        </tr>
+        <tr>
+            <td><div class="student-info"> Sophia Carter</div></td>
+        </tr>
+        <tr>
+            <td><div class="student-info"> Noah Ward</div></td>
+        </tr>
+
+        <tr>
+            <td><div class="student-info"> Micheal Jordan</div></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+</body>
+</html>
