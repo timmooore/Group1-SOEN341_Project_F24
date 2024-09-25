@@ -19,7 +19,7 @@ const Team = require('./models/team');
 
 //MIDDLEWARE
 //TO BE MODIFIED
-const { isLoggedIn } = require('./middleware');
+const { isLoggedIn, isInstructor, isStudent } = require('./middleware');
 
 //Connect to mongoose
 mongoose.connect('mongodb://localhost:27017/soen341project');
@@ -90,7 +90,7 @@ app.post('/register', async (req, res) => {
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if(err) return next(err);
-            res.redirect('/secret');
+            res.redirect('/');
         })
     } catch(e) {
         res.redirect('register');
@@ -124,10 +124,45 @@ app.post('/test', isLoggedIn, async (req, res) => {
     console.log(testUser.username);
     console.log(testUser.user_type);
     } catch(e) {
-    console.log("Almost exploded lol");
+    console.log("Almost exploded lol"); //Delete this once testing's done.
     }
 res.redirect('/');
 })
+
+
+//INSTRUCTOR ROUTES
+app.get('/instructor_index', async (req, res) => {
+    try {
+      const teams = await Team.find({ instructor_id: req.user._id });
+      res.render('instructor_index', { teams });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
+//TEAMS ROUTES
+app.post('/teams/new', async (req, res) => {
+    try {
+      const { team_name } = req.body;
+      const instructor = await User.findById(req.user.id);
+      
+      if (instructor.user_type !== 'instructor') {
+        return res.status(403).json({ message: 'Only instructors can create teams' });
+      }
+      
+      const newTeam = new Team({
+        team_name,
+        instructor_id: instructor._id,
+        student_ids: []
+      });
+      
+      await newTeam.save();
+      res.json({ message: 'Team created successfully', team: newTeam });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
 
 app.listen(3000, () => {
     console.log("SERVING YOUR APP!")
