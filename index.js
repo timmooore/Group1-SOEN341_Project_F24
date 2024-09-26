@@ -119,11 +119,10 @@ app.post('/logout', (req, res, next) => {
 //Deleting this once testing's done.
 app.post('/test', isLoggedIn, async (req, res) => {
     try {
-    const testUser = await User.findById(currentUser._id);
-    console.log(testUser);
-    console.log(testUser._id);
-    console.log(testUser.username);
-    console.log(testUser.user_type);
+    console.log(req.user);
+    console.log(req.user._id);
+    console.log(req.user.username);
+    console.log(req.user.user_type);
     } catch(e) {
     console.log("Almost exploded lol"); 
     }
@@ -134,7 +133,7 @@ res.redirect('/');
 app.get('/student_index', isStudent, async (req, res) => {
     try {
         const teams = await Team.find({ student_ids: req.user._id });
-        res.send("This works!");
+        res.render('student_index', { teams });
         //res.render('student_index', { teams });
     } catch(e) {
         res.status(500).json({ error: e.message });
