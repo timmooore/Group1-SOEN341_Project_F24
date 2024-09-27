@@ -65,7 +65,7 @@ passport.deserializeUser(User.deserializeUser()); //How to remove a user from a 
 
 //Middleware that'll execute on every request to the server
 app.use((req, res, next) => {
-    res.locals.currentUser = req.user; //Has user info in the req session - Important !
+    res.locals.currentUser = req.user; //Note that res.locals is meant for data passed to the "views" folder. It's not automatically available in all routes!
     /* Setting this up, later, once we're more ahead.
     res.locals.success = req.flash('success'); //Flashes a message if the req succeeds (The specific messages are set up in the routes)
     res.locals.error = req.flash('error'); //Flashes a message if the req fails (The specific messages are set up in the routes)
@@ -118,54 +118,59 @@ app.post('/logout', (req, res, next) => {
 });
 
 //Test route for the user id with passport
+//Deleting this once testing's done.
 app.post('/test', isLoggedIn, async (req, res) => {
     try {
-    const testUser = await User.findById(req.user._id);
-    console.log(testUser);
-    console.log(testUser._id);
-    console.log(testUser.username);
-    console.log(testUser.user_type);
+    console.log(req.user);
+    console.log(req.user._id);
+    console.log(req.user.username);
+    console.log(req.user.user_type);
     } catch(e) {
-    console.log("Almost exploded lol"); //Delete this once testing's done.
+    console.log("Almost exploded lol"); 
     }
 res.redirect('/');
 })
 
+//STUDENT ROUTES
+app.get('/student_index', isStudent, async (req, res) => {
+    try {
+        const teams = await Team.find({ student_ids: req.user._id });
+        res.render('student_index', { teams });
+        //res.render('student_index', { teams });
+    } catch(e) {
+        res.status(500).json({ error: e.message });
+    }
+});
 
 //INSTRUCTOR ROUTES
-app.get('/instructor_index', async (req, res) => {
+app.get('/instructor_index', isInstructor, async (req, res) => {
     try {
       const teams = await Team.find({ instructor_id: req.user._id });
       res.render('instructor_index', { teams });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
     }
   });
   
 //TEAMS ROUTES
-app.post('/teams/new', async (req, res) => {
+app.post('/teams/new', isInstructor, async (req, res) => {
     try {
       const { team_name } = req.body;
-      const instructor = await User.findById(req.user.id);
-      
-      if (instructor.user_type !== 'instructor') {
-        return res.status(403).json({ message: 'Only instructors can create teams' });
-      }
-      
+  
+      // No need to fetch the user again, req.user already has the authenticated user info
       const newTeam = new Team({
-        team_name,
-        instructor_id: instructor._id,
+        team_name: team_name,
+        instructor_id: req.user._id,  // Use req.user._id directly here
         student_ids: []
       });
-      
+  
       await newTeam.save();
-      res.json({ message: 'Team created successfully', team: newTeam });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.redirect('/instructor_index');
+    } catch (e) {
+      res.status(500).json({ error: e.message });
     }
   });
   
-
 app.listen(3000, () => {
     console.log("SERVING YOUR APP!")
 })
