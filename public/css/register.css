@@ -1,5 +1,5 @@
 body {
-    width: 600px;
+    width: 700px;
     font-family: Arial, sans-serif;
     margin: 0 auto;
     background: #f4f4f4;
@@ -39,6 +39,6 @@ input {
 
 button {
     margin-top: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
-
 }

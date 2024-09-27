@@ -151,6 +151,26 @@ app.get('/instructor_index', isInstructor, async (req, res) => {
       res.status(500).json({ error: e.message });
     }
   });
+
+//Route added for the team_management.ejs file accessed from instructor_index.ejs
+app.get('/team_management', isInstructor, async (req, res) => {
+    try {
+        const teams = await Team.find({ instructor_id: req.user._id });
+        res.render('team_management', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+//Route added for the course_roster.ejs file accessed from instructor_index.ejs
+app.get('/course_roster', isInstructor, async (req, res) => {
+    try {
+        const teams = await Team.find({ instructor_id: req.user._id });
+        res.render('course_roster', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
   
 //TEAMS ROUTES
 app.post('/teams/new', isInstructor, async (req, res) => {
