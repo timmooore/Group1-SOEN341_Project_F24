@@ -1,22 +1,22 @@
-###SOEN 341 - Tutorial FK-X
+**SOEN 341 - Tutorial FK-X Group 1**
 
-Team: Group 1
+# Project: A Peer Assessment Application
 
-Team Members:
-Alessandro Condina
-Olivier Constanzo de Oliveira
-Nicholas Gallacher
-Timothy Moore
-Nicholas Papamakarios
-Gregory Sacciadis
 
---------------------------------------
-Project: A Peer Assessment Application
---------------------------------------
-
-Description:
 
 The Peer Assessment Application is designed for university team projects, allowing students to evaluate their teammates based on key performance dimensions. This system promotes accountability and provides valuable feedback to students and instructors on team dynamics and individual contributions.
+
+## Team Members and Roles
+- **Alessandro Condina**: Frontend Development Lead. Responsible for leading the development of the application front end.
+- **Olivier Constanzo de Oliveira**: Development Pivot. Assists both front- and backend development as necessary.
+- **Nicholas Gallacher**: Product Owner. Serves as the primary voice for product features and requirements and oversees the creation and prioritization of user stories.
+- **Timothy Moore**: Project Manager. 
+- **Nicholas Papamakarios**: Scrum Master.
+- **Gregory Sacciadis**: Backend Development lead.
+
+
+
+
 
 
 Key Features:
