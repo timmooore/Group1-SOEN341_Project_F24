@@ -4,7 +4,7 @@
 
 The Peer Assessment Application is designed for university team projects, allowing students to evaluate their teammates based on key performance dimensions. This system promotes accountability and provides valuable feedback to students and instructors on team dynamics and individual contributions.
 
-## Table of Contents
+## :bookmark: Table of Contents 
 1. [Team Members and Roles](#team-members-and-roles)
 2. [Key Features](#key-features)
 3. [Development Methodology](#development-methodology)
@@ -12,7 +12,7 @@ The Peer Assessment Application is designed for university team projects, allowi
 5. [Usage](#usage)
 6. [Sprint 1](#sprint-1)
 
-## Team Members and Roles
+## :superhero: Team Members and Roles
 | Team Member | Role | Description |
 | ----------- | ---- | ----------- |
 | **Alessandro Condina** | Frontend Development Lead | Responsible for leading the development of the application frontend. |
@@ -22,7 +22,7 @@ The Peer Assessment Application is designed for university team projects, allowi
 | **Nicholas Papamakarios** | Scrum Master (SM) & Development Pivot | Maintains meeting minutes and ensures development team has clear understanding of task requirements and priorities set by the PO and PM. Assists front- and back-end development as necessary. |
 | **Gregory Sacciadis** | Backend Development lead | Responsible for leading the development of the application backend. |
 
-## Key Features
+## :star: Key Features
 
 1. **Student Assessment:** Students assess their teammates anonymously on a 7-point scale across four dimensions: cooperation, conceptual contribution, practical contribution, and work ethic. The evaluation promotes honest feedback and helps improve team performance.
     - Cooperation: Participation in meetings, communication, assistance, and volunteering.
@@ -34,7 +34,7 @@ The Peer Assessment Application is designed for university team projects, allowi
 
 3. **Instructor Dashboard:** Instructors can manage teams and access detailed peer assessment results by team and student. Data can also be exported as CSV files for further analysis.
 
-## Development Methodology
+## :arrows_counterclockwise: Development Methodology
 
 This uses the scrum agile development framework. Development is broken down into four (4) development sprints.
 
@@ -46,7 +46,7 @@ This project uses the modified Fibonacci scale to assign story points:
 - 8, 13: Medium-complexity user stories that can be accomplished in a single sprint.
 - 20, 40, 100: Large user stories or epics that cannot be accomplished in a single sprint.
 
-## Technology Stack
+## :package: Technology Stack
 
 ### Frontend
 - CSS :art:
@@ -55,12 +55,12 @@ This project uses the modified Fibonacci scale to assign story points:
 ### Database
 - MongoDB :leafy_green:
 
-## Usage Guide
+## :open_book: Usage Guide
 
 To be filled in as project develops.
 
 <a name="sprint-1"></a>
-## Sprint 1: User Authentication & Team Management
+## :runner: Sprint 1: User Authentication & Team Management
 
 ### Sprint Description
 
