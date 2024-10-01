@@ -142,6 +142,15 @@ app.get('/student_index', isStudent, async (req, res) => {
     }
 });
 
+app.get('/student_team_management', isStudent, async (req, res) => {
+    try {
+        const teams = await Team.find({ student_ids: req.user._id });
+        res.render('student_team_management', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 //INSTRUCTOR ROUTES
 app.get('/instructor_index', isInstructor, async (req, res) => {
     try {

@@ -4,26 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/instructor_home.css">
     <title>Student Dashboard</title>
 </head>
 <body>
-<h1>This is the Student Dashboard!</h1>
-    
-<h2>Teams Managed by <%= currentUser.username %></h1>
 
-<% if (teams.length > 0) { %>
-  <ul>
-    <% teams.forEach(team => { %>
-      <li>
-        <h2>Team Name: <%= team.team_name %></h2>
-        <p>Team ID: <%= team._id %></p>
-        <p>Number of Students: <%= team.student_ids.length %></p>
-      </li>
-    <% }) %>
-  </ul>
-<% } else { %>
-  <p>You are not apart of any teams currently.</p>
-<% } %>
+<header>
+    <img src="/Assets/concordia logo.png" alt="Concordia Logo">
+    <h1>Student Dashboard</h1>
+</header>
+
+<nav>
+    <a href="/student_team_management">Team Management</a>
+    <a href="/team_evaluations"> Peer Evaluation</a>
+</nav>
+<section>
+<!-- Code to show students there team will go here -->
+    <h3>You are not in a team yet</h3>
+</section>
 
 </body>
 </html>
