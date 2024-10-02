@@ -1,0 +1,60 @@
+/* Style the container for the search bar and results */
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Set max width for better UX */
+    margin: 0 auto; /* Center the container */
+  }
+  
+  /* Style the search bar */
+  .search-bar {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  /* Focused state for the search bar */
+  .search-bar:focus {
+    border-color: #007bff; /* Change to your theme color */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  }
+  
+  /* Style the results list */
+  .results-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 0 0 4px 4px;
+    border-top: none;
+    max-height: 200px; /* Limit height of dropdown */
+    overflow-y: auto; /* Scroll if too many results */
+    background-color: #fff;
+    position: absolute;
+    width: 100%; /* Make it as wide as the input */
+    z-index: 1000; /* Ensure it appears above other content */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style individual result items */
+  .result-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  /* Hover effect for result items */
+  .result-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Last result item doesn't need a border */
+  .result-item:last-child {
+    border-bottom: none;
+  }
+  

@@ -89,11 +89,17 @@ app.post('/register', async (req, res) => {
         const user = new User({ username, user_type });
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
-            if(err) return next(err);
-            res.redirect('/');
+            if(err) return next(err); //Callback function if an error occurs
+            //If they're an instructor, go to the instructor dashboard; otherwise, go to the student dashboard
+            if (req.user.user_type == 'instructor') {
+                res.redirect('/instructor_index');
+            }
+            else {
+                res.redirect('/student_index')
+            }
         })
     } catch(e) {
-        res.redirect('register');
+        res.redirect('register'); //Something happened, so go back to the register page
     }
 })
 
@@ -102,7 +108,12 @@ app.get('/login', (req, res) => {
 })
 app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
     //Login fix
-    res.redirect('/');
+    if (req.user.user_type == 'instructor') {
+        res.redirect('/instructor_index');
+    }
+    else {
+        res.redirect('/student_index')
+    }
 })
 
 //Passport logout requires a callback function, so it has a bit more code
@@ -168,6 +179,38 @@ app.post('/teams/new', isInstructor, async (req, res) => {
       res.status(500).json({ error: e.message });
     }
   });
+
+  //Be sure to group these into route folders & rename the routes
+  
+app.get('/teams/:teamId/edit', isInstructor, async (req, res) => {
+    try {
+      // Fetch the team by its ID and populate the students in the team
+      const team = await Team.findById(req.params.teamId).populate('student_ids');
+      
+      // Render the 'edit_team' view, passing the team data
+      res.render('edit_team', { team });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+  
+
+  //Search route for the edit team page (and more, later)
+  app.get('/search-students', async (req, res) => {
+    try {
+      const query = req.query.query || ''; // Get the search query or an empty string if none
+      const students = await User.find({
+        user_type: 'student',
+        username: { $regex: query, $options: 'i' } // Case-insensitive regex search (partial match) on search
+      })
+      .limit(10); // Limit results to 10 students
+  
+      res.json(students); // Send matching students as JSON data
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+  
   
 app.listen(3000, () => {
     console.log("SERVING YOUR APP!")
