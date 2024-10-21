@@ -18,7 +18,7 @@
   
   /* Focused state for the search bar */
   .search-bar:focus {
-    border-color: #007bff; /* Change to your theme color */
+    border-color: #007bff; 
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
   }
   
@@ -58,3 +58,16 @@
     border-bottom: none;
   }
   
+  .student-item {
+    font-size: 18px;
+    padding: 8px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .student-item:hover {
+      box-shadow: 0px 4px 8px rgba(0, 255, 0, 0.6); /* Green glow */
+  }
+  .current-team-student {
+      font-weight: bold;
+  }

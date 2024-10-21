@@ -10,6 +10,7 @@ const LocalStrategy = require('passport-local');
 const app = express(); 
 
 //MODELS
+
 //Serves static files from 'public' directory
 app.use(express.static('public'));
 
@@ -39,6 +40,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true })); //Helps with parsing the request body
 app.use(methodOverride('_method')); //This helps with changing/naming the HTTP Requests
+app.use(express.json()); // Parses JSON data (from API requests)
 
 const sessionConfig = {
     secret: 'soen341',
@@ -82,6 +84,7 @@ app.get('/', isLoggedIn, (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register')
 })
+
 
 app.post('/register', async (req, res) => {
     try {
@@ -141,7 +144,7 @@ res.redirect('/');
 })
 
 //STUDENT ROUTES
-app.get('/student_index', isStudent, async (req, res) => {
+app.get('/student_index', isLoggedIn, isStudent, async (req, res) => {
     try {
         const teams = await Team.find({ student_ids: req.user._id });
         res.render('student_index', { teams });
@@ -151,8 +154,18 @@ app.get('/student_index', isStudent, async (req, res) => {
     }
 });
 
+// Will delete this, soon
+app.get('/student_team_management', isLoggedIn, isStudent, async (req, res) => {
+    try {
+        const teams = await Team.find({ student_ids: req.user._id });
+        res.render('student_team_management', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 //INSTRUCTOR ROUTES
-app.get('/instructor_index', isInstructor, async (req, res) => {
+app.get('/instructor_index', isLoggedIn, isInstructor, async (req, res) => {
     try {
       const teams = await Team.find({ instructor_id: req.user._id });
       res.render('instructor_index', { teams });
@@ -160,9 +173,30 @@ app.get('/instructor_index', isInstructor, async (req, res) => {
       res.status(500).json({ error: e.message });
     }
   });
+
+//Will delete this, soon
+// Route added for the team_management.ejs file accessed from instructor_index.ejs
+app.get('/team_management', isLoggedIn, isInstructor, async (req, res) => {
+    try {
+        const teams = await Team.find({ instructor_id: req.user._id });
+        res.render('team_management', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+//Route added for the course_roster.ejs file accessed from instructor_index.ejs
+app.get('/course_roster', isLoggedIn, isInstructor, async (req, res) => {
+    try {
+        const teams = await Team.find({ instructor_id: req.user._id });
+        res.render('course_roster', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
   
 //TEAMS ROUTES
-app.post('/teams/new', isInstructor, async (req, res) => {
+app.post('/teams/new', isLoggedIn, isInstructor, async (req, res) => {
     try {
       const { team_name } = req.body;
   
@@ -182,34 +216,56 @@ app.post('/teams/new', isInstructor, async (req, res) => {
 
   //Be sure to group these into route folders & rename the routes
   
-app.get('/teams/:teamId/edit', isInstructor, async (req, res) => {
+app.get('/teams/:teamId/edit', isLoggedIn, isInstructor, async (req, res) => {
+  try {
+    // Fetch the team by its ID and populate the students in the team
+    const team = await Team.findById(req.params.teamId).populate('student_ids');
+    
+    // Fetch all users where user_type is 'student'
+    const allStudents = await User.find({ user_type: 'student' });
+
+    // Render the 'edit_team' view, passing both the team and all students
+    res.render('edit_team', { team, allStudents });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+  //Add student to a team from the instructor team_edit page
+  app.post('/teams/:teamId/add-student', isInstructor, async (req, res) => {
     try {
-      // Fetch the team by its ID and populate the students in the team
-      const team = await Team.findById(req.params.teamId).populate('student_ids');
-      
-      // Render the 'edit_team' view, passing the team data
-      res.render('edit_team', { team });
+      const { studentId } = req.body;
+      const team = await Team.findById(req.params.teamId);
+  
+      // Add the student to the team's student_ids array
+      if (!team.student_ids.includes(studentId)) {
+        team.student_ids.push(studentId);
+        await team.save();
+      }
+  
+      res.status(200).json({ message: 'Student added successfully' });
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
   });
-  
 
   //Search route for the edit team page (and more, later)
-  app.get('/search-students', async (req, res) => {
+  app.get('/search-students', isInstructor, async (req, res) => {
+    const query = req.query.query;
+
     try {
-      const query = req.query.query || ''; // Get the search query or an empty string if none
       const students = await User.find({
-        user_type: 'student',
-        username: { $regex: query, $options: 'i' } // Case-insensitive regex search (partial match) on search
-      })
-      .limit(10); // Limit results to 10 students
-  
-      res.json(students); // Send matching students as JSON data
-    } catch (e) {
-      res.status(500).json({ error: e.message });
+        username: { $regex: query, $options: 'i' }, //Look for all students with a matching prefix (regex)
+        user_type: 'student'  // Hardcoded to only search for students
+      });
+
+      res.json(students);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching students' });
     }
   });
+
   
   
 app.listen(3000, () => {
