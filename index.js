@@ -13,7 +13,8 @@ const fs = require('fs');
 const multer = require('multer');
 const csv = require('csv-parser');
 
-const upload = multer({ dest: 'uploads/' }); // Points to uploads folder for temporary storage of file uploads
+const upload = multer({ dest: path.join(__dirname, 'uploads')});  // Points to uploads folder for temporary storage of file uploads 
+
 //Serves static files from 'public' directory
 app.use(express.static('public'));
 
@@ -278,7 +279,7 @@ app.get('/teams/generate-teams', isLoggedIn, isInstructor, (req, res) => {
 app.post('/teams/generate-teams', upload.single('csvFile'), async (req, res) => {
   try {
     const teamSize = parseInt(req.body.teamSize);
-    const filePath = path.join(__dirname, '../uploads', req.file.filename);
+    const filePath = req.file.path; // Use Multer's generated file path
 
     const students = [];
 
@@ -307,7 +308,7 @@ app.post('/teams/generate-teams', upload.single('csvFile'), async (req, res) => 
         // Create users and assign them to teams using modulo operation
         for (let i = 0; i < students.length; i++) {
           const student = students[i];
-          const username = `${student.firstName[0].toLowerCase()}_${student.lastName.toLowerCase()}`;
+          const username = `${student.firstName.toLowerCase()}_${student.lastName.toLowerCase()}`;
           const newUser = new User({
             username,
             user_type: 'student',
