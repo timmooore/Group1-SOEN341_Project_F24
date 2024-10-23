@@ -291,7 +291,8 @@ app.post('/teams/generate-teams', upload.single('csvFile'), async (req, res) => 
       })
       .on('end', async () => {
         // Calculate the number of teams needed
-        const numberOfTeams = Math.ceil(students.length / teamSize);
+        // Excess students means there'll be teams with more students (not less)
+        const numberOfTeams = Math.floor(students.length / teamSize); 
 
         // Create empty teams
         const teams = [];
@@ -305,28 +306,34 @@ app.post('/teams/generate-teams', upload.single('csvFile'), async (req, res) => 
           teams.push(newTeam);
         }
 
-        // Create users and assign them to teams using modulo operation
+        // Check if user exists or create a new user, and assign them to teams
         for (let i = 0; i < students.length; i++) {
           const student = students[i];
           const username = `${student.firstName.toLowerCase()}_${student.lastName.toLowerCase()}`;
-          const newUser = new User({
-            username,
-            user_type: 'student',
-            password: 'password' // Set default password
-          });
-          await newUser.setPassword('password'); // Use passport-local-mongoose to hash password
-          await newUser.save();
 
-          // Assign the student to a team
+          // Use passport-local-mongoose's built-in findByUsername
+          let existingUser = await User.findByUsername(username);
+
+          if (!existingUser) {
+            // If user does not exist, create a new user
+            const newUser = new User({
+              username,
+              user_type: 'student'
+            });
+            await newUser.setPassword('password'); // Set default password
+            await newUser.save();
+            existingUser = newUser; // Set the new user as the existing user
+          }
+
+          // Assign the user (new or existing) to a team
           const teamIndex = i % numberOfTeams; // Round-robin team assignment
-          teams[teamIndex].student_ids.push(newUser._id);
+          teams[teamIndex].student_ids.push(existingUser._id);
           await teams[teamIndex].save();
         }
 
         // Clean up uploaded CSV file
         fs.unlinkSync(filePath);
-
-        res.status(200).json({ message: 'Teams generated successfully!' });
+        res.redirect('/instructor_index');
       });
   } catch (e) {
     console.error(e);
