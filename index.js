@@ -218,7 +218,16 @@ app.post('/teams/new', isLoggedIn, isInstructor, async (req, res) => {
     }
   });
 
-  //Be sure to group these into route folders & rename the routes
+// View page for a given team (for students, to be honest)
+app.get('/teams/:teamId', isLoggedIn, async (req, res) => {
+  try {
+    // Fetch the team by its ID and populate the students in the team
+    const team = await Team.findById(req.params.teamId).populate('student_ids');
+    res.render('student_team_management', { team, currentUserId: req.user._id });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
   
 app.get('/teams/:teamId/edit', isLoggedIn, isInstructor, async (req, res) => {
   try {
@@ -235,40 +244,40 @@ app.get('/teams/:teamId/edit', isLoggedIn, isInstructor, async (req, res) => {
   }
 });
 
-  //Add student to a team from the instructor team_edit page
-  app.post('/teams/:teamId/add-student', isInstructor, async (req, res) => {
-    try {
-      const { studentId } = req.body;
-      const team = await Team.findById(req.params.teamId);
-  
-      // Add the student to the team's student_ids array
-      if (!team.student_ids.includes(studentId)) {
-        team.student_ids.push(studentId);
-        await team.save();
-      }
-  
-      res.status(200).json({ message: 'Student added successfully' });
-    } catch (e) {
-      res.status(500).json({ error: e.message });
+//Add student to a team from the instructor team_edit page
+app.post('/teams/:teamId/add-student', isInstructor, async (req, res) => {
+  try {
+    const { studentId } = req.body;
+    const team = await Team.findById(req.params.teamId);
+
+    // Add the student to the team's student_ids array
+    if (!team.student_ids.includes(studentId)) {
+      team.student_ids.push(studentId);
+      await team.save();
     }
-  });
 
-  //Search route for the edit team page (and more, later)
-  app.get('/search-students', isInstructor, async (req, res) => {
-    const query = req.query.query;
+    res.status(200).json({ message: 'Student added successfully' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
-    try {
-      const students = await User.find({
-        username: { $regex: query, $options: 'i' }, //Look for all students with a matching prefix (regex)
-        user_type: 'student'  // Hardcoded to only search for students
-      });
+//Search route for the edit team page (and more, later)
+app.get('/search-students', isInstructor, async (req, res) => {
+  const query = req.query.query;
 
-      res.json(students);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error fetching students' });
-    }
-  });
+  try {
+    const students = await User.find({
+      username: { $regex: query, $options: 'i' }, //Look for all students with a matching prefix (regex)
+      user_type: 'student'  // Hardcoded to only search for students
+    });
+
+    res.json(students);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching students' });
+  }
+});
 
 //Generate teams page
 app.get('/teams/generate-teams', isLoggedIn, isInstructor, (req, res) => {
