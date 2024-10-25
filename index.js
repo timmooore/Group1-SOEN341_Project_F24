@@ -21,6 +21,7 @@ app.use(express.static('public'));
 //MODELS
 const User = require('./models/user');
 const Team = require('./models/team');
+const Evaluation = require('./models/evaluation');
 
 //MIDDLEWARE
 //TO BE MODIFIED
@@ -166,6 +167,35 @@ app.get('/student_team_management', isLoggedIn, isStudent, async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
+});
+
+//Student id - evaluator; student id - evaluatee
+app.get('/students/:evaluatorId/assessment/:evaluateeId', isLoggedIn, isStudent, async (req, res) => {
+    try {
+      const evaluatee = await User.findById(req.params.evaluateeId);
+      res.render('assessment', { currentUser: req.user, evaluatee });
+    } catch(e) {
+      res.status(500).json({ error: e.message });
+    }
+});
+
+app.post('/students/:evaluatorId/assessment/:evaluateeId', isLoggedIn, isStudent, async (req, res) => {
+  try {
+    const { cooperation, conceptual_contribution, practical_contribution, work_ethic, feedback } = req.body;
+    const newEvaluation = new Evaluation({
+      evaluator: req.params.evaluatorId,
+      evaluatee: req.params.evaluateeId,
+      cooperation: cooperation,
+      conceptual_contribution: conceptual_contribution, 
+      practical_contribution: practical_contribution,
+      work_ethic: work_ethic,
+      feedback: feedback
+    })
+    await newEvaluation.save()
+    res.redirect('/student_index')
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 //INSTRUCTOR ROUTES

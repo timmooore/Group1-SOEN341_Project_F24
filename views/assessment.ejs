@@ -6,29 +6,27 @@
     <title>Assessment Demo</title>
 </head>
 <h1>Peer Evaluation (First Demo)</h1>
-<h2>Assessing *Student Username*</h2>
+<h2>Assessing <%= evaluatee.username %> </h2>
 <body>
-    <form>
+    <form action="/students/<%= currentUser._id %>/assessment/<%= evaluatee._id %>" method="POST">
         <div>
             <label>Cooperation</label> <br>
             <input type="range" id="cooperation" name="cooperation" min="1" max="5" step="1"> <br>
-            <input type="textarea" size="30" placeholder="Explain why you gave this grade">
         </div>
         <div>
             <label>Conceptual Contribution</label> <br>
             <input type="range" id="conceptual_contribution" name="conceptual_contribution" min="1" max="5" step="1"> <br>
-            <input type="textarea" size="30" placeholder="Explain why you gave this grade">
         </div>
         <div>
             <label>Practical Contribution</label> <br>
             <input type="range" id="practical_contribution" name="practical_contribution" min="1" max="5" step="1"> <br>
-            <input type="textarea" size="30" placeholder="Explain why you gave this grade">
         </div>
         <div>
             <label>Work Ethic</label> <br>
             <input type="range" id="work_ethic" name="work_ethic" min="1" max="5" step="1"> <br>
-            <input type="textarea" size="30" placeholder="Explain why you gave this grade">
         </div>
+        <textarea id="feedback" name="feedback" rows="7" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
+        <button>Submit Assessment</button>
     </form>
 </body>
 </html>
