@@ -7,7 +7,9 @@ assignees: ''
 
 ---
 
+**Story Points:** 0/1/2/3/5/8/13/20/40
 **Priority:** Low/Medium/High
+**Risk:** Low/Medium/High
 
 ## Description
 **As a [type of user], I want to [goal or desired outcome], so that [reason/benefit].**
