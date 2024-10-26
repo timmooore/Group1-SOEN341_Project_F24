@@ -1,12 +1,27 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/instructor_home.css">
     <title>Document</title>
 </head>
+
+
 <body>
+
+<header>
+    <img src="/Assets/concordia logo.png" alt="Concordia Logo">
+    <nav>
+        <a href="team_management.ejs">Team Management</a>
+        <a href="team_evaluations.ejs"> Team Evaluations</a>
+
+    </nav>
+</header>
+
+
+
+
     <h1>This is the Instructor Dashboard!</h1>
     <form action="/teams/new" method="POST">
         <div>
@@ -15,21 +30,24 @@
         </div>
         <button>Create new team</button>
     </form>
-<h2>Teams Managed by <%= currentUser.username %></h1>
 
-<% if (teams.length > 0) { %>
-  <ul>
-    <% teams.forEach(team => { %>
-      <li>
-        <h2>Team Name: <%= team.team_name %></h2>
-        <p>Team ID: <%= team._id %></p>
-        <p>Number of Students: <%= team.student_ids.length %></p>
-      </li>
-    <% }) %>
-  </ul>
-<% } else { %>
-  <p>You are not managing any teams currently.</p>
-<% } %>
+<section>
+    <h2>Teams Managed by <%= currentUser.username %></h2>
+
+    <% if (teams.length > 0) { %>
+        <ul>
+            <% teams.forEach(team => { %>
+                <li>
+                    <h2>Team Name: <%= team.team_name %></h2>
+                    <p>Team ID: <%= team._id %></p>
+                    <p>Number of Students: <%= team.student_ids.length %></p>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>You are not managing any teams currently.</p>
+    <% } %>
+</section>
 
 </body>
 </html>
