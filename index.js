@@ -10,7 +10,6 @@ const LocalStrategy = require('passport-local');
 const app = express(); 
 
 //MODELS
-
 //Serves static files from 'public' directory
 app.use(express.static('public'));
 
@@ -84,7 +83,6 @@ app.get('/register', (req, res) => {
     res.render('register')
 })
 
-
 app.post('/register', async (req, res) => {
     try {
         const { username, password, user_type } = req.body;
@@ -142,15 +140,6 @@ app.get('/student_index', isStudent, async (req, res) => {
     }
 });
 
-app.get('/student_team_management', isStudent, async (req, res) => {
-    try {
-        const teams = await Team.find({ student_ids: req.user._id });
-        res.render('student_team_management', { teams });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-});
-
 //INSTRUCTOR ROUTES
 app.get('/instructor_index', isInstructor, async (req, res) => {
     try {
@@ -160,26 +149,6 @@ app.get('/instructor_index', isInstructor, async (req, res) => {
       res.status(500).json({ error: e.message });
     }
   });
-
-//Route added for the team_management.ejs file accessed from instructor_index.ejs
-app.get('/team_management', isInstructor, async (req, res) => {
-    try {
-        const teams = await Team.find({ instructor_id: req.user._id });
-        res.render('team_management', { teams });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-});
-
-//Route added for the course_roster.ejs file accessed from instructor_index.ejs
-app.get('/course_roster', isInstructor, async (req, res) => {
-    try {
-        const teams = await Team.find({ instructor_id: req.user._id });
-        res.render('course_roster', { teams });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-});
   
 //TEAMS ROUTES
 app.post('/teams/new', isInstructor, async (req, res) => {
