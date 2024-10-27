@@ -4,23 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/instructor_home.css">
-    <title>Document</title>
+    <title>Home</title>
 </head>
 
 
 <body>
 
-<header>
-    <img src="/Assets/concordia logo.png" alt="Concordia Logo">
-    <nav>
-        <a href="team_management.ejs">Team Management</a>
-        <a href="team_evaluations.ejs"> Team Evaluations</a>
-
-    </nav>
-</header>
-
-
-
+<%- include('partials/instructor_navbar') %>
 
     <h1>This is the Instructor Dashboard!</h1>
     <form action="/teams/new" method="POST">
