@@ -134,11 +134,27 @@ app.get('/student_index', isStudent, async (req, res) => {
     try {
         const teams = await Team.find({ student_ids: req.user._id });
         res.render('student_index', { teams });
-        //res.render('student_index', { teams });
     } catch(e) {
         res.status(500).json({ error: e.message });
     }
 });
+
+app.get('/assessment', (req, res) => {
+    try {
+        // If needed, fetch data here (like the current user or other variables for the template)
+        const currentUser = req.user; // assuming `req.user` is set up by authentication middleware
+        const evaluatee = {}; // or fetch from database if applicable
+
+        // Render assessment.ejs and pass any required data
+        res.render('assessment', { evaluatee, currentUser });
+    } catch (error) {
+        console.error("Error loading assessment page:", error);
+        res.status(500).send("An error occurred.");
+    }
+});
+
+
+
 
 //INSTRUCTOR ROUTES
 app.get('/instructor_index', isInstructor, async (req, res) => {
