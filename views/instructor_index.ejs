@@ -32,6 +32,9 @@
                     <h2>Team Name: <%= team.team_name %></h2>
                     <p>Team ID: <%= team._id %></p>
                     <p>Number of Students: <%= team.student_ids.length %></p>
+                    <form action="/teams/<%= team._id %>/edit">
+                        <button>Edit team</button>
+                    </form>
                 </li>
             <% }) %>
         </ul>

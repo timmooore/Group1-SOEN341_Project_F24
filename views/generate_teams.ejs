@@ -10,12 +10,9 @@
 
 <body>
     <%- include("partials/instructor_navbar") %>
-    <header>
-        <img src="/Assets/concordia logo.png" alt="Concordia Logo">
-        <h1>Generate Teams</h1>
-    </header>
-    
-    <form action="/teams/generate-teams" method="POST" enctype="multipart/form-data">
+    <h1>Generate Teams</h1>
+    <hr>
+    <form action="/generate-teams" method="POST" enctype="multipart/form-data">
         <label for="teamSize">Choose team size:</label>
         <select id="teamSize" name="teamSize" required>
         <option value="2">2 students per team</option>

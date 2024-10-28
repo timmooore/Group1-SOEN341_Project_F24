@@ -310,12 +310,12 @@ app.get('/search-students', isInstructor, async (req, res) => {
 });
 
 //Generate teams page
-app.get('/teams/generate-teams', isLoggedIn, isInstructor, (req, res) => {
+app.get('/generate-teams', isLoggedIn, isInstructor, (req, res) => {
   res.render('generate_teams');
 })
 
 // Route to handle team generation
-app.post('/teams/generate-teams', upload.single('csvFile'), async (req, res) => {
+app.post('/generate-teams', upload.single('csvFile'), async (req, res) => {
   try {
     const teamSize = parseInt(req.body.teamSize);
     const filePath = req.file.path; // Use Multer's generated file path
