@@ -19,9 +19,6 @@
             <input type="password" name="password" id="password" placeholder="password" required> 
         </div>
         <button>Login</button>
-        <div>
-            <a href="/register">Registration Page</a>
-        </div>
     </form>
 
 
@@ -29,18 +26,26 @@
 <div class="wrapper">
     <div class="collapsible">
         <input type="checkbox" id="collapsible-header">
-        <label for="collapsible-header"> Instructor Login <i class="fa fa-arrow-right" id="arrow-icon"></i> </label>
+        <label for="collapsible-header"> Register Here <i class="fa fa-arrow-right" id="arrow-icon"></i> </label>
         <div class="collapsible-form">
-            <form action="/login" method="POST">
+            <form action="/register" method="POST">
                 <div>
-                    <label for="admin-username">Enter username:</label>
-                    <input type="text" name="username" id="admin-username" placeholder="username">
+                    <label for="username">Enter username:</label>
+                    <input type="text" name="username" id="username" placeholder="username" required>
                 </div>
                 <div>
-                    <label for="admin-password">Enter password:</label>
-                    <input type="password" name="password" id="admin-password" placeholder="password">
+                    <label for="password">Enter password:</label>
+                    <input type="password" name="password" id="password" placeholder="password" required>
                 </div>
-                <button>Login</button>
+                <div>
+                    <label for="user_type">Select your role:</label>
+                    <select id="user_type" name="user_type" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="student">Student</option>
+                        <option value="instructor">Instructor</option>
+                    </select>
+                </div>
+                <button type="submit">Register</button>
             </form>
         </div>
     </div>
