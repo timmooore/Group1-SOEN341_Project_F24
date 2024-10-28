@@ -8,12 +8,17 @@ const flash = require('connect-flash'); //Will use this later, but we haven't se
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const app = express(); 
+// This stuff is for the csv/file upload functionality
+const fs = require('fs');
+const multer = require('multer');
+const csv = require('csv-parser');
 
-//MODELS
+const upload = multer({ dest: path.join(__dirname, 'uploads')});  // Points to uploads folder for temporary storage of file uploads 
+
 //Serves static files from 'public' directory
 app.use(express.static('public'));
 
-//Models
+//MODELS
 const User = require('./models/user');
 const Team = require('./models/team');
 const Evaluation = require('./models/evaluation');
@@ -40,6 +45,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true })); //Helps with parsing the request body
 app.use(methodOverride('_method')); //This helps with changing/naming the HTTP Requests
+app.use(express.json()); // Parses JSON data (from API requests)
 
 const sessionConfig = {
     secret: 'soen341',
@@ -84,17 +90,24 @@ app.get('/register', (req, res) => {
     res.render('register')
 })
 
+
 app.post('/register', async (req, res) => {
     try {
         const { username, password, user_type } = req.body;
         const user = new User({ username, user_type });
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
-            if(err) return next(err);
-            res.redirect('/');
+            if(err) return next(err); //Callback function if an error occurs
+            //If they're an instructor, go to the instructor dashboard; otherwise, go to the student dashboard
+            if (req.user.user_type == 'instructor') {
+                res.redirect('/instructor_index');
+            }
+            else {
+                res.redirect('/student_index')
+            }
         })
     } catch(e) {
-        res.redirect('register');
+        res.redirect('register'); //Something happened, so go back to the register page
     }
 })
 
@@ -103,7 +116,12 @@ app.get('/login', (req, res) => {
 })
 app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
     //Login fix
-    res.redirect('/');
+    if (req.user.user_type == 'instructor') {
+        res.redirect('/instructor_index');
+    }
+    else {
+        res.redirect('/student_index')
+    }
 })
 
 //Passport logout requires a callback function, so it has a bit more code
@@ -131,26 +149,23 @@ res.redirect('/');
 })
 
 //STUDENT ROUTES
-app.get('/student_index', isStudent, async (req, res) => {
+app.get('/student_index', isLoggedIn, isStudent, async (req, res) => {
     try {
         const teams = await Team.find({ student_ids: req.user._id });
         res.render('student_index', { teams });
+        //res.render('student_index', { teams });
     } catch(e) {
         res.status(500).json({ error: e.message });
     }
 });
 
-app.get('/assessment', (req, res) => {
+// Will delete this, soon
+app.get('/student_team_management', isLoggedIn, isStudent, async (req, res) => {
     try {
-        // If needed, fetch data here (like the current user or other variables for the template)
-        const currentUser = req.user; // assuming `req.user` is set up by authentication middleware
-        const evaluatee = {}; // or fetch from database if applicable
-
-        // Render assessment.ejs and pass any required data
-        res.render('assessment', { evaluatee, currentUser });
-    } catch (error) {
-        console.error("Error loading assessment page:", error);
-        res.status(500).send("An error occurred.");
+        const teams = await Team.find({ student_ids: req.user._id });
+        res.render('student_team_management', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
     }
 });
 
@@ -184,7 +199,7 @@ app.post('/students/:evaluatorId/assessment/:evaluateeId', isLoggedIn, isStudent
 });
 
 //INSTRUCTOR ROUTES
-app.get('/instructor_index', isInstructor, async (req, res) => {
+app.get('/instructor_index', isLoggedIn, isInstructor, async (req, res) => {
     try {
       const teams = await Team.find({ instructor_id: req.user._id });
       res.render('instructor_index', { teams });
@@ -192,9 +207,30 @@ app.get('/instructor_index', isInstructor, async (req, res) => {
       res.status(500).json({ error: e.message });
     }
   });
+
+//Will delete this, soon
+// Route added for the team_management.ejs file accessed from instructor_index.ejs
+app.get('/team_management', isLoggedIn, isInstructor, async (req, res) => {
+    try {
+        const teams = await Team.find({ instructor_id: req.user._id });
+        res.render('team_management', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+//Route added for the course_roster.ejs file accessed from instructor_index.ejs
+app.get('/course_roster', isLoggedIn, isInstructor, async (req, res) => {
+    try {
+        const teams = await Team.find({ instructor_id: req.user._id });
+        res.render('course_roster', { teams });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
   
 //TEAMS ROUTES
-app.post('/teams/new', isInstructor, async (req, res) => {
+app.post('/teams/new', isLoggedIn, isInstructor, async (req, res) => {
     try {
       const { team_name } = req.body;
   
