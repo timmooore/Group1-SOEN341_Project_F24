@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/team_management.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <title>My Team</title>
 </head>
 <body>
-
+<%- include("partials/student_navbar") %>
 <header>
     <img src="/Assets/concordia logo.png" alt="Concordia Logo">
     <h1>Team Management</h1>
 </header>
-
-<nav>
-
-</nav>
-
-<section>
-
-</section>
-
+<h2>Your Teammates</h2>
+<hr>
+<ul>
+    <% team.student_ids.forEach(student => { %>
+      <% if (student._id.toString() !== currentUserId.toString()) { %> <!-- using req.user._id -->
+        <li class="current-team-student">
+            <%= student.username %>
+            <!-- MODIFY THIS FORM WHEN YOU IMPLEMENT THE PROPER GET ROUTE -->
+            <form action="/students/<%= currentUserId %>/assessment/<%= student._id %>" method="GET">
+                <button>Evaluate Teammate</button>
+            </form>
+        </li>
+      <% } %>
+    <% }) %>
+  </ul>
+  
 </body>
 </html>

@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/navbar.css">
     <title>Student Dashboard</title>
 </head>
 <body>
-<h1>This is the Student Dashboard!</h1>
+<%- include('partials/student_navbar') %>
+<h1>Welcome <%= currentUser.username %>!</h1>
     
-<h2>Teams Managed by <%= currentUser.username %></h1>
+<h2>Teams you're apart of:</h2>
 
 <% if (teams.length > 0) { %>
   <ul>
@@ -18,6 +20,9 @@
         <h2>Team Name: <%= team.team_name %></h2>
         <p>Team ID: <%= team._id %></p>
         <p>Number of Students: <%= team.student_ids.length %></p>
+        <form action="/teams/<%= team._id %>" method="GET">
+          <button>View team</button>
+        </form>
       </li>
     <% }) %>
   </ul>
