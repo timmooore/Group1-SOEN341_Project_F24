@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,8 +7,12 @@
     <link rel="stylesheet" href="css/instructor_home.css">
     <link rel="stylesheet" href="css/navbar.css">
 </head>
+
+
 <body>
-    <%- include('partials/instructor_navbar') %>
+
+<%- include('partials/instructor_navbar') %>
+
     <h1>This is the Instructor Dashboard!</h1>
     <form action="/teams/new" method="POST">
         <div>
@@ -18,24 +21,24 @@
         </div>
         <button>Create new team</button>
     </form>
-<h2>Teams Managed by <%= currentUser.username %></h1>
 
-<% if (teams.length > 0) { %>
-  <ul>
-    <% teams.forEach(team => { %>
-      <li>
-        <h2>Team Name: <%= team.team_name %></h2>
-        <p>Team ID: <%= team._id %></p>
-        <p>Number of Students: <%= team.student_ids.length %></p>
-        <form action="/teams/<%= team._id %>/edit" method="GET">
-          <button>Edit team</button>
-        </form>
-      </li>
-    <% }) %>
-  </ul>
-<% } else { %>
-  <p>You are not managing any teams currently.</p>
-<% } %>
+<section>
+    <h2>Teams Managed by <%= currentUser.username %></h2>
+
+    <% if (teams.length > 0) { %>
+        <ul>
+            <% teams.forEach(team => { %>
+                <li>
+                    <h2>Team Name: <%= team.team_name %></h2>
+                    <p>Team ID: <%= team._id %></p>
+                    <p>Number of Students: <%= team.student_ids.length %></p>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>You are not managing any teams currently.</p>
+    <% } %>
+</section>
 
 </body>
 </html>
