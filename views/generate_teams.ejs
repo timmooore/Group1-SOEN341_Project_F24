@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/public/css/generate_teams.css">
-    <link rel="stylesheet" href="/css/navbar.css"
+    <link rel="stylesheet" href="/css/instructor_navbar.css">
     <title>Team Management</title>
 </head>
 
 <body>
     <%- include("partials/instructor_navbar") %>
-    <header>
-        <img src="/Assets/concordia logo.png" alt="Concordia Logo">
-        <h1>Generate Teams</h1>
-    </header>
-    
-    <form action="/teams/generate-teams" method="POST" enctype="multipart/form-data">
+    <h1>Generate Teams</h1>
+    <hr>
+    <form action="/generate-teams" method="POST" enctype="multipart/form-data">
         <label for="teamSize">Choose team size:</label>
         <select id="teamSize" name="teamSize" required>
         <option value="2">2 students per team</option>
