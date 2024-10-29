@@ -4,10 +4,7 @@
 name: Node.js CI
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
-  push:
-
-  pull_request:
-    branches: [ "main" ]
+  [push, pull_request]
 
 jobs:
   Explore-GitHub-Actions:
@@ -24,22 +21,22 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-  # build:
+  build:
+    runs-on: ubuntu-latest
 
-  #   runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-  #   strategy:
-  #     matrix:
-  #       node-version: [18.x, 20.x, 22.x]
-  #       # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Use Node.js ${{ matrix.node-version }}
-  #     uses: actions/setup-node@v4
-  #     with:
-  #       node-version: ${{ matrix.node-version }}
-  #       cache: 'npm'
-  #   - run: npm ci
-  #   - run: npm run build --if-present
-  #   - run: npm test
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
