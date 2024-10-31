@@ -181,22 +181,50 @@ app.get('/students/:evaluatorId/assessment/:evaluateeId', isLoggedIn, isStudent,
 
 app.post('/students/:evaluatorId/assessment/:evaluateeId', isLoggedIn, isStudent, async (req, res) => {
   try {
-    const { cooperation, conceptual_contribution, practical_contribution, work_ethic, feedback } = req.body;
+    const {
+      cooperation,
+      cooperation_feedback,
+      conceptual_contribution,
+      conceptual_feedback,
+      practical_contribution,
+      practical_feedback,
+      work_ethic,
+      work_feedback
+    } = req.body;
+
     const newEvaluation = new Evaluation({
       evaluator: req.params.evaluatorId,
       evaluatee: req.params.evaluateeId,
-      cooperation: cooperation,
-      conceptual_contribution: conceptual_contribution, 
-      practical_contribution: practical_contribution,
-      work_ethic: work_ethic,
-      feedback: feedback
-    })
-    await newEvaluation.save()
-    res.redirect('/student_index')
-  } catch(e) {
+      cooperation: { rating: cooperation, feedback: cooperation_feedback },
+      conceptual_contribution: { rating: conceptual_contribution, feedback: conceptual_feedback },
+      practical_contribution: { rating: practical_contribution, feedback: practical_feedback },
+      work_ethic: { rating: work_ethic, feedback: work_feedback }
+    });
+
+    await newEvaluation.save();
+    res.redirect('/student_index');
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
+
+app.get('/students/:evaluatorId/assessment/:evaluateeId/confirm', isLoggedIn, isStudent, (req, res) => {
+  const { cooperation, cooperation_feedback, conceptual_contribution, conceptual_feedback, practical_contribution, practical_feedback, work_ethic, work_feedback } = req.query;
+  
+  res.render('confirm', {
+    evaluateeId: req.params.evaluateeId,
+    evaluatorId: req.params.evaluatorId,
+    cooperation,
+    cooperation_feedback,
+    conceptual_contribution,
+    conceptual_feedback,
+    practical_contribution,
+    practical_feedback,
+    work_ethic,
+    work_feedback
+  });
+});
+
 
 //INSTRUCTOR ROUTES
 app.get('/instructor_index', isLoggedIn, isInstructor, async (req, res) => {
@@ -381,6 +409,15 @@ app.post('/generate-teams', upload.single('csvFile'), async (req, res) => {
 });
   
   
-app.listen(3000, () => {
-    console.log("SERVING YOUR APP!")
-})
+// Start the server only if not in a test environment
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`SERVING YOUR APP ON PORT ${PORT}!`);
+  });
+}
+
+module.exports = {
+  app,                  // Export the Express app
+  mongooseConnection: mongoose.connection // Export the Mongoose connection
+};

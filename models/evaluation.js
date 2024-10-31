@@ -13,19 +13,20 @@ const EvaluationSchema = new Schema({
     required: true
   },
   cooperation: {
-    type: Number, min: 1, max: 5, required: true 
+    rating: { type: Number, min: 1, max: 5, required: true },
+    feedback: {type: String, required: false}
   },
   conceptual_contribution: {
-    type: Number, min: 1, max: 5, required: true
+    rating: { type: Number, min: 1, max: 5, required: true },
+    feedback: {type: String, required: false}
   },
   practical_contribution: {
-    type: Number, min: 1, max: 5, required: true
+    rating: { type: Number, min: 1, max: 5, required: true },
+    feedback: {type: String, required: false}
   },
   work_ethic: {
-    type: Number, min: 1, max: 5, required: true
-  },
-  feedback: {
-    type: String, required: false
+    rating: { type: Number, min: 1, max: 5, required: true },
+    feedback: {type: String, required: false}
   }
 });
 
