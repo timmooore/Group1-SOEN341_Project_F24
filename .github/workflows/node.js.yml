@@ -22,7 +22,7 @@ jobs:
       mongodb:
         image: mongo:latest
         ports:
-          - 27017:27017
+          - "27017:27017"
         options: >-
           --health-cmd "mongo --eval 'db.adminCommand(\"ping\")'" 
           --health-interval 10s 
@@ -53,4 +53,6 @@ jobs:
     - run: npm run build --if-present
     - name: Run Jest test suite
       run: npm test
+      env:
+        MONGODB_URI: mongodb://localhost:27017/testdb
       # run: npm run test1
