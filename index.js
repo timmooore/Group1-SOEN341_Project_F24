@@ -208,6 +208,23 @@ app.post('/students/:evaluatorId/assessment/:evaluateeId', isLoggedIn, isStudent
   }
 });
 
+app.get('/students/:evaluatorId/assessment/:evaluateeId/confirm', isLoggedIn, isStudent, (req, res) => {
+  const { cooperation, cooperation_feedback, conceptual_contribution, conceptual_feedback, practical_contribution, practical_feedback, work_ethic, work_feedback } = req.query;
+  
+  res.render('confirm', {
+    evaluateeId: req.params.evaluateeId,
+    evaluatorId: req.params.evaluatorId,
+    cooperation,
+    cooperation_feedback,
+    conceptual_contribution,
+    conceptual_feedback,
+    practical_contribution,
+    practical_feedback,
+    work_ethic,
+    work_feedback
+  });
+});
+
 
 //INSTRUCTOR ROUTES
 app.get('/instructor_index', isLoggedIn, isInstructor, async (req, res) => {
