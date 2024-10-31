@@ -60,7 +60,7 @@ This project uses the modified Fibonacci scale to assign story points:
 ### Database
 - MongoDB :leafy_green:
 ### Testing Framework
-- Jest :joker:
+- Jest :black_joker:
 
 <a name="usage-guide"></a>
 ## :open_book: Usage Guide
