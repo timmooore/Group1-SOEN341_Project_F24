@@ -409,6 +409,15 @@ app.post('/generate-teams', upload.single('csvFile'), async (req, res) => {
 });
   
   
-app.listen(3000, () => {
-    console.log("SERVING YOUR APP!")
-})
+// Start the server only if not in a test environment
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`SERVING YOUR APP ON PORT ${PORT}!`);
+  });
+}
+
+module.exports = {
+  app,                  // Export the Express app
+  mongooseConnection: mongoose.connection // Export the Mongoose connection
+};
