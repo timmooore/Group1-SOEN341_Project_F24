@@ -11,6 +11,7 @@ The Peer Assessment Application is designed for university team projects, allowi
 4. [Technology Stack](#technology-stack)
 5. [Usage Guide](#usage-guide)
 6. [Sprint 1](#sprint-1)
+7. [Sprint 2](#sprint-2)
 
 <a name="team-members-and-roles"></a>
 ## :superhero: Team Members and Roles
@@ -58,6 +59,8 @@ This project uses the modified Fibonacci scale to assign story points:
 - Node.js :atom:
 ### Database
 - MongoDB :leafy_green:
+### Testing Framework
+- Jest :joker:
 
 <a name="usage-guide"></a>
 ## :open_book: Usage Guide
@@ -80,10 +83,19 @@ The first sprint focuses on setting up the project environment and implementing 
 4. Implementation of user authentication system, allowing login functionality for students and instructors.
 5. Demo of at least one core functionality (e.g., login system).
 
+<a name="sprint-2"></a>
+## :runner: Sprint 2: Basic Peer Assessment Interface, Evaluation, and Submission
 
-## Sprint 2: [To Be Defined]
+### Sprint Description
 
-Information for Sprint 2 will be added when instructions are available.
+The second sprint focuses on the development of the basic features and interface required in the Peer Assessment Application.
+
+### Activities
+
+1. Design and develop simple peer assessment interfaces where students can select teammates for evaluation.
+2. Enable students to provide peer ratings using a 5-point scale for the cooperation dimension.
+3. Confirm submission of peer assessment.
+4. Begin development of dimension-based assessment.  
 
 
 
