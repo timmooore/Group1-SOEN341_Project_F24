@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/assessment.css">
+    <title>Review Assessment</title>
+</head>
+<body>
+<%- include('partials/student_navbar') %>
+<h1>Peer Evaluation</h1>
+<h2>Reviewing Assessment</h2>
+
+<div class="assessment">
+    <div>
+        <label>Cooperation</label> <br>
+        <p><strong>Rating:</strong> <%= cooperation %></p>
+        <p><strong>Feedback:</strong> <%= cooperation_feedback ? cooperation_feedback : "No feedback provided" %></p>
+    </div>
+    <hr>
+    <div>
+        <label>Conceptual Contribution</label> <br>
+        <p><strong>Rating:</strong> <%= conceptual_contribution %></p>
+        <p><strong>Feedback:</strong> <%= conceptual_feedback ? conceptual_feedback : "No feedback provided" %></p>
+    </div>
+    <hr>
+    <div>
+        <label>Practical Contribution</label> <br>
+        <p><strong>Rating:</strong> <%= practical_contribution %></p>
+        <p><strong>Feedback:</strong> <%= practical_feedback ? practical_feedback : "No feedback provided" %></p>
+    </div>
+    <hr>
+    <div>
+        <label>Work Ethic</label> <br>
+        <p><strong>Rating:</strong> <%= work_ethic %></p>
+        <p><strong>Feedback:</strong> <%= work_feedback ? work_feedback : "No feedback provided" %></p>
+    </div>
+    <hr>
+
+    <form action="/students/<%= evaluatorId %>/assessment/<%= evaluateeId %>" method="POST">
+        <!-- Hidden fields to pass data to the post route -->
+        <input type="hidden" name="cooperation" value="<%= cooperation %>">
+        <input type="hidden" name="cooperation_feedback" value="<%= cooperation_feedback %>">
+        <input type="hidden" name="conceptual_contribution" value="<%= conceptual_contribution %>">
+        <input type="hidden" name="conceptual_feedback" value="<%= conceptual_feedback %>">
+        <input type="hidden" name="practical_contribution" value="<%= practical_contribution %>">
+        <input type="hidden" name="practical_feedback" value="<%= practical_feedback %>">
+        <input type="hidden" name="work_ethic" value="<%= work_ethic %>">
+        <input type="hidden" name="work_feedback" value="<%= work_feedback %>">
+        <button type="submit" class="submit-button">Submit Assessment</button>
+    </form>
+
+    <form action="/students/<%= evaluatorId %>/assessment/<%= evaluateeId %>" method="GET">
+        <button type="submit" class="submit-button">Start Over</button>
+    </form>
+</div>
+</body>
+</html>
