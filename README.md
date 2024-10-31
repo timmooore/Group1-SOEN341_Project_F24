@@ -17,12 +17,12 @@ The Peer Assessment Application is designed for university team projects, allowi
 ## :superhero: Team Members and Roles
 | Team Member | Role | Description |
 | ----------- | ---- | ----------- |
-| **Alessandro Condina** | Frontend Development Lead | Responsible for leading the development of the application frontend. |
-| **Olivier Constanzo de Oliveira** | Development Pivot | Assists both front- and backend development as necessary. |
+| **Alessandro Condina** | Frontend Development Lead | Responsible for leading the development of the application frontend. Main voice for the overall design of the project. Communicates with backend leads to ensure design visions are well-understood. |
+| **Olivier Constanzo de Oliveira** | Development Pivot | Assists both front- and backend development as necessary. Works with Frontend lead to design the different pages of the applications and ensure all team members understand the design vision. |
 | **Nicholas Gallacher** | Product Owner (PO) | Serves as the primary voice for product features and requirements and oversees the creation and prioritization of user stories. |
-| **Timothy Moore** | Project Manager (PM) | Oversees management and maintenance of progress tracking and collaboration tools on GitHub. Supports Product Owner with backlog refinement and Scrum Master with effective communcation of priorities to development team. |
+| **Timothy Moore** | Project Manager (PM) | Oversees management and maintenance of progress tracking and collaboration tools on GitHub. Supports Product Owner with backlog refinement and Scrum Master with effective communcation of priorities to development team. Manages acceptance testing. |
 | **Nicholas Papamakarios** | Scrum Master (SM) & Development Pivot | Maintains meeting minutes and ensures development team has clear understanding of task requirements and priorities set by the PO and PM. Assists front- and back-end development as necessary. |
-| **Gregory Sacciadis** | Backend Development lead | Responsible for leading the development of the application backend. |
+| **Gregory Sacciadis** | Backend Development lead | Responsible for leading the development of the application backend. Ensures proper route setup and logic, and conducts regular code reviews of the other developers' code. |
 
 <a name="key-features"></a>
 ## :star: Key Features
