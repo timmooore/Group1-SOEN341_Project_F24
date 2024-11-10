@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/student_team_managment.css">
     <title>My Team</title>
 </head>
 <body>
 <%- include("partials/student_navbar") %>
+<section class="main-section">
 <h2>Your Teammates</h2>
-<hr>
 <ul>
     <% team.student_ids.forEach(student => { %>
       <% if (student._id.toString() !== currentUserId.toString()) { %> <!-- using req.user._id -->
@@ -23,6 +24,6 @@
       <% } %>
     <% }) %>
   </ul>
-  
+    </section>
 </body>
 </html>
