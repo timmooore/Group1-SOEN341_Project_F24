@@ -320,6 +320,30 @@ app.post('/teams/:teamId/add-student', isInstructor, async (req, res) => {
   }
 });
 
+//Instructor routes to see student assessments
+//Detailed Assessments
+app.get('/assessments-detailed', isInstructor, async (req, res) => {
+  try {
+    // Fetch all students
+    const students = await User.find({ user_type: 'student' });
+
+    // Fetch evaluations for each student without populating evaluator
+    const studentsWithEvaluations = await Promise.all(students.map(async (student) => {
+        const evaluations = await Evaluation.find({ evaluatee: student._id });
+        return { student, evaluations };
+    }));
+
+    // Render the page with the students and evaluations
+    res.render('assessments_detailed', { studentsWithEvaluations });
+  } catch(e) {
+    res.status(500).json({error : e.message });
+  }
+})
+
+//Summarized Assessments
+
+
+
 //Search route for the edit team page (and more, later)
 app.get('/search-students', isInstructor, async (req, res) => {
   const query = req.query.query;
