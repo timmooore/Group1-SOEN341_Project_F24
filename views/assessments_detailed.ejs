@@ -28,6 +28,7 @@
                             <th>Conceptual Contribution</th>
                             <th>Practical Contribution</th>
                             <th>Work Ethic</th>
+                            <th>Average Score</th>
                             <th>See Comments</th>
                         </tr>
                     </thead>
@@ -38,6 +39,7 @@
                                 <td><%= evaluation.conceptual_contribution.rating %></td>
                                 <td><%= evaluation.practical_contribution.rating %></td>
                                 <td><%= evaluation.work_ethic.rating %></td>
+                                <td><%= evaluation.average_score %></td>
                                 <td><button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#comments<%= index %>" aria-expanded="false" aria-controls="#comments<%= index %>">
                                   See Comments
                               </button></td>
