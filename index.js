@@ -341,6 +341,44 @@ app.get('/assessments-detailed', isInstructor, async (req, res) => {
 })
 
 //Summarized Assessments
+app.get('/assessments-summary', async (req, res) => {
+  try {
+      // Step 1: Aggregate the average ratings and scores for each student
+      const summary = await Evaluation.aggregate([
+          {
+              $group: {
+                  _id: '$evaluatee', // Group by evaluatee (student)
+                  averageCooperation: { $avg: '$cooperation.rating' },
+                  averageConceptual: { $avg: '$conceptual_contribution.rating' },
+                  averagePractical: { $avg: '$practical_contribution.rating' },
+                  averageWorkEthic: { $avg: '$work_ethic.rating' },
+                  overallAverageScore: { $avg: '$average_score' }
+              }
+          }
+      ]);
+
+      // Step 2: Populate student data for the summary
+      const populatedSummary = await Promise.all(
+          summary.map(async (record) => {
+              const student = await User.findById(record._id);
+              return {
+                  studentName: student.username,
+                  averageCooperation: record.averageCooperation.toFixed(1),
+                  averageConceptual: record.averageConceptual.toFixed(1),
+                  averagePractical: record.averagePractical.toFixed(1),
+                  averageWorkEthic: record.averageWorkEthic.toFixed(1),
+                  overallAverageScore: record.overallAverageScore.toFixed(1)
+              };
+          })
+      );
+
+      // Step 3: Render the summary page with the aggregated data
+      res.render('assessments_summary', { studentsSummary: populatedSummary });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  }
+});
 
 
 
