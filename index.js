@@ -320,9 +320,62 @@ app.post('/teams/:teamId/add-student', isInstructor, async (req, res) => {
   }
 });
 
+//See a particular student's assessment
+app.get('/assessments/:studentId', isLoggedIn, async (req, res) => {
+  try {
+    const student = await User.findById(req.params.studentId); // Find the student
+    if (!student) {
+      return res.status(404).send('Student not found');
+    }
+
+    // Find all evaluations where the student is the evaluatee
+    const evaluations = await Evaluation.find({ evaluatee: student._id });
+
+    if (!evaluations || evaluations.length === 0) {
+      return res.status(404).send('No evaluations found for this student.');
+    }
+
+    // Calculate the totals and count
+    const totalScores = evaluations.reduce(
+      (totals, eval) => {
+        totals.cooperation += eval.cooperation.rating;
+        totals.conceptualContribution += eval.conceptual_contribution.rating;
+        totals.practicalContribution += eval.practical_contribution.rating;
+        totals.workEthic += eval.work_ethic.rating;
+        totals.averageScore += eval.average_score;
+        totals.count += 1;
+        return totals;
+      },
+      {
+        cooperation: 0,
+        conceptualContribution: 0,
+        practicalContribution: 0,
+        workEthic: 0,
+        averageScore: 0,
+        count: 0,
+      }
+    );
+
+    // Compute the averages, rounded to 1 decimal place
+    const averages = {
+      cooperation: (totalScores.cooperation / totalScores.count).toFixed(1),
+      conceptualContribution: (totalScores.conceptualContribution / totalScores.count).toFixed(1),
+      practicalContribution: (totalScores.practicalContribution / totalScores.count).toFixed(1),
+      workEthic: (totalScores.workEthic / totalScores.count).toFixed(1),
+      averageScore: (totalScores.averageScore / totalScores.count).toFixed(1),
+    };
+
+    // Respond with the evaluations and their averages
+    res.render('assessment_student', {currentUser: req.user, student, evaluations, averages});
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 //Instructor routes to see student assessments
 //Detailed Assessments
-app.get('/assessments-detailed', isInstructor, async (req, res) => {
+app.get('/assessments-detailed', isLoggedIn, isInstructor, async (req, res) => {
   try {
     // Fetch all students
     const students = await User.find({ user_type: 'student' });
@@ -341,9 +394,9 @@ app.get('/assessments-detailed', isInstructor, async (req, res) => {
 })
 
 //Summarized Assessments
-app.get('/assessments-summary', async (req, res) => {
+app.get('/assessments-summary', isLoggedIn, isInstructor, async (req, res) => {
   try {
-      // Step 1: Aggregate the average ratings and scores for each student
+      //Aggregate the average ratings and scores for each student
       const summary = await Evaluation.aggregate([
           {
               $group: {
@@ -357,7 +410,7 @@ app.get('/assessments-summary', async (req, res) => {
           }
       ]);
 
-      // Step 2: Populate student data for the summary
+      //Populate student data for the summary
       const populatedSummary = await Promise.all(
           summary.map(async (record) => {
               const student = await User.findById(record._id);
@@ -371,15 +424,12 @@ app.get('/assessments-summary', async (req, res) => {
               };
           })
       );
-
-      // Step 3: Render the summary page with the aggregated data
       res.render('assessments_summary', { studentsSummary: populatedSummary });
   } catch (err) {
       console.error(err);
       res.status(500).send('Server Error');
   }
 });
-
 
 
 //Search route for the edit team page (and more, later)
