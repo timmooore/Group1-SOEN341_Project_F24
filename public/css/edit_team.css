@@ -71,3 +71,22 @@
   .current-team-student {
       font-weight: bold;
   }
+
+/* Button Styling */
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #8a0000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #99192b;
+}

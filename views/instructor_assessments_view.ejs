@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/edit_team.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <title>Edit Team</title>
+</head>
+<body>
+<%- include('partials/instructor_navbar') %>    
+<button class="submit-button" onclick="location.href='/assessments-detailed'">View Detailed Assessments</button>
+<button class="submit-button" onclick="location.href='/assessments-summary'">View Summarized Assessments</button>
+<!-- Search container for search bar and results -->
+<div>
+    <h2> Search Student</h2>
+    <div class="search-container">
+        <input 
+        type="text" 
+        id="searchInput" 
+        class="search-bar"
+        placeholder="Search for students" 
+        oninput="filterStudents()"
+        >
+        
+        <!-- Results will be displayed below the input -->
+        <ul id="studentResults" class="results-list"></ul>
+    </div>
+</div>
+<!-- Inline script for filtering students and adding to the team -->
+<script>
+  const allStudents = <%- JSON.stringify(allStudents) %>; // Pass all students to JS
+
+  function filterStudents() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const resultsList = document.getElementById('studentResults');
+    resultsList.innerHTML = ''; // Clear previous results
+
+    // Filter students based on the query
+    const filteredStudents = allStudents.filter(student => 
+        student.username.toLowerCase().includes(query)
+    );
+
+    // Display the filtered student list
+    filteredStudents.forEach(student => {
+        const li = document.createElement('li');
+        li.textContent = student.username;
+        li.classList.add('student-item');
+        li.dataset.studentId = student._id; // Store the student ID in the data attribute
+
+        // Add an event listener to handle going to that student's evaluation page
+        li.addEventListener('click', () => { 
+            window.location.href = `/assessments/${student._id}`;
+        });
+        resultsList.appendChild(li);
+        });
+    }
+
+</script>
+
+</body>
+</html>

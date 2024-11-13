@@ -1,0 +1,47 @@
+/* styles.css */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.collapsible {
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+}
+
+.collapsible:after {
+    content: '\25bc'; /* Downward arrow */
+    float: right;
+}
+
+.collapsible.active:after {
+    content: '\25b2'; /* Upward arrow */
+}
+
+.content {
+    display: none;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-top: -1px;
+}
