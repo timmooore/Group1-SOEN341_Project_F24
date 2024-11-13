@@ -320,6 +320,18 @@ app.post('/teams/:teamId/add-student', isInstructor, async (req, res) => {
   }
 });
 
+//ASSESSMENT ROUTES
+//Instructor Assessment View Page
+app.get('/assessments-instructor', isLoggedIn, isInstructor, async(req, res) => {
+  try {
+    // Fetch all users where user_type is 'student'
+    const allStudents = await User.find({ user_type: 'student' });
+
+    res.render('instructor_assessments_view', { allStudents });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+})
 //See a particular student's assessment
 app.get('/assessments/:studentId', isLoggedIn, async (req, res) => {
   try {
@@ -373,7 +385,6 @@ app.get('/assessments/:studentId', isLoggedIn, async (req, res) => {
   }
 });
 
-//Instructor routes to see student assessments
 //Detailed Assessments
 app.get('/assessments-detailed', isLoggedIn, isInstructor, async (req, res) => {
   try {

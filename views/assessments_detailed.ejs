@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
-    <h1>Detailed Assessments</h1>
     <%- include('partials/instructor_navbar') %>
-
+    <div class="container mt-3">
+    <h1>Detailed Assessments</h1>
     <% studentsWithEvaluations.forEach(({ student, evaluations }) => { %>
         <div class="card card-body">
-            <h2>Student: <%= student.username %></h2>
+            <h2><%= student.username %></h2>
 
             <% if (evaluations.length === 0) { %>
                 <p>No evaluations yet.</p>
@@ -68,6 +68,7 @@
             <% } %>
         </div>
     <% }); %>
+    </div>
 
 <!--Bootstrap scripts-->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" 
