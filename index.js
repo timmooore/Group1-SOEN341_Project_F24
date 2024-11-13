@@ -332,7 +332,7 @@ app.get('/assessments/:studentId', isLoggedIn, async (req, res) => {
     const evaluations = await Evaluation.find({ evaluatee: student._id });
 
     if (!evaluations || evaluations.length === 0) {
-      return res.status(404).send('No evaluations found for this student.');
+      return res.render('assessments_error', {student});
     }
 
     // Calculate the totals and count
