@@ -10,69 +10,94 @@
     <title>Review Assessment</title>
 </head>
 <body>
-<%= if(currentUser.user_type == 'student') { %>
+<% if(currentUser.user_type == 'student') { %>
 <%- include('partials/student_navbar') %>
-<%= } else { %>
+<% } else { %>
 <%- include('partials/instructor_navbar') %>
-<%= } %>
+<% } %>
 
-<h1>Viewing <%= student.username %> </h1>
-<div class="card card-body">
-<h2>Evaluation Summary:</h2>
-<table class="table table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th>Student Name</th>
-            <th>Cooperation (Avg)</th>
-            <th>Conceptual Contribution (Avg)</th>
-            <th>Practical Contribution (Avg)</th>
-            <th>Work Ethic (Avg)</th>
-            <th>Overall Average Score</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% studentsSummary.forEach(student => { %>
+<div class="container mt-3">
+    <h1><%= student.username %></h1>
+    <div class="card card-body">
+    <h2>Evaluation Summary</h2>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Student Name</th>
+                <th>Cooperation (Avg)</th>
+                <th>Conceptual Contribution (Avg)</th>
+                <th>Practical Contribution (Avg)</th>
+                <th>Work Ethic (Avg)</th>
+                <th>Overall Average Score</th>
+            </tr>
+        </thead>
+        <tbody>
             <tr>
                 <td><%= student.username %></td>
-                <td><%= averages.averageCooperation %></td>
-                <td><%= averages.averageConceptual %></td>
-                <td><%= student.averagePractical %></td>
-                <td><%= student.averageWorkEthic %></td>
-                <td><%= student.overallAverageScore %></td>
+                <td><%= averages.cooperation %></td>
+                <td><%= averages.conceptualContribution %></td>
+                <td><%= averages.practicalContribution %></td>
+                <td><%= averages.workEthic %></td>
+                <td><%= averages.averageScore %></td>
             </tr>
-        <% }); %>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+    </div>
 </div>
-
 <!--Putting all the student's assessments here-->
-<div class="assessment">
-    <div>
-        <label>Cooperation</label> <br>
-        <p><strong>Rating:</strong> <%= cooperation %></p>
-        <p><strong>Feedback:</strong> <%= cooperation_feedback ? cooperation_feedback : "No feedback provided" %></p>
-    </div>
-    <hr>
-    <div>
-        <label>Conceptual Contribution</label> <br>
-        <p><strong>Rating:</strong> <%= conceptual_contribution %></p>
-        <p><strong>Feedback:</strong> <%= conceptual_feedback ? conceptual_feedback : "No feedback provided" %></p>
-    </div>
-    <hr>
-    <div>
-        <label>Practical Contribution</label> <br>
-        <p><strong>Rating:</strong> <%= practical_contribution %></p>
-        <p><strong>Feedback:</strong> <%= practical_feedback ? practical_feedback : "No feedback provided" %></p>
-    </div>
-    <hr>
-    <div>
-        <label>Work Ethic</label> <br>
-        <p><strong>Rating:</strong> <%= work_ethic %></p>
-        <p><strong>Feedback:</strong> <%= work_feedback ? work_feedback : "No feedback provided" %></p>
-    </div>
-    <hr>
-</div>
+<div class="container mt-2">
+    <div class="card card-body">
+    <h2>Detailed Evaluations</h2>
 
+    <!-- Carousel -->
+    <div id="evaluationCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="10000">
+        <div class="carousel-inner">
+            <% evaluations.forEach((evaluation, index) => { %>
+                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Evaluation <%= index + 1 %></h5>
+                            <div>
+                                <label>Cooperation</label> <br>
+                                <strong>Rating:</strong> <%= evaluation.cooperation.rating %>
+                                <p><strong>Feedback:</strong> <%= evaluation.cooperation.feedback || "No feedback provided" %></p>
+                            </div>
+                            <hr>
+                            <div>
+                                <label>Conceptual Contribution</label> <br>
+                                <strong>Rating:</strong> <%= evaluation.conceptual_contribution.rating %>
+                                <p><strong>Feedback:</strong> <%= evaluation.conceptual_contribution.feedback || "No feedback provided" %></p>
+                            </div>
+                            <hr>
+                            <div>
+                                <label>Practical Contribution</label> <br>
+                                <strong>Rating:</strong> <%= evaluation.practical_contribution.rating %>
+                                <p><strong>Feedback:</strong> <%= evaluation.practical_contribution.feedback || "No feedback provided" %></p>
+                            </div>
+                            <hr>
+                            <div>
+                                <label>Work Ethic</label> <br>
+                                <strong>Rating:</strong> <%= evaluation.work_ethic.rating %>
+                                <p><strong>Feedback:</strong> <%= evaluation.work_ethic.feedback || "No feedback provided" %></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#evaluationCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#evaluationCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" 
 integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" 
 crossorigin="anonymous"></script>
