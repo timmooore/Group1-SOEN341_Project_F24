@@ -349,12 +349,12 @@ app.get('/assessments/:studentId', isLoggedIn, async (req, res) => {
 
     // Calculate the totals and count
     const totalScores = evaluations.reduce(
-      (totals, eval) => {
-        totals.cooperation += eval.cooperation.rating;
-        totals.conceptualContribution += eval.conceptual_contribution.rating;
-        totals.practicalContribution += eval.practical_contribution.rating;
-        totals.workEthic += eval.work_ethic.rating;
-        totals.averageScore += eval.average_score;
+      (totals, evaluation) => {
+        totals.cooperation += evaluation.cooperation.rating;
+        totals.conceptualContribution += evaluation.conceptual_contribution.rating;
+        totals.practicalContribution += evaluation.practical_contribution.rating;
+        totals.workEthic += evaluation.work_ethic.rating;
+        totals.averageScore += evaluation.average_score;
         totals.count += 1;
         return totals;
       },
