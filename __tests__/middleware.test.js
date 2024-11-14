@@ -1,38 +1,38 @@
-const { isLoggedIn, isInstructor, isStudent } = require('../middleware');
+const { isLoggedIn, isInstructor, isStudent } = require("../middleware");
 
-describe('Middleware Tests', () => {
-    test('isLoggedIn middleware should call next() if user is authenticated', () => {
-        const req = { isAuthenticated: () => true };
-        const res = {};
-        const next = jest.fn();
+describe("Middleware Tests", () => {
+  test("isLoggedIn middleware should call next() if user is authenticated", () => {
+    const req = { isAuthenticated: () => true };
+    const res = {};
+    const next = jest.fn();
 
-        isLoggedIn(req, res, next);
-        expect(next).toHaveBeenCalled();
-    });
+    isLoggedIn(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
 
-    test('isInstructor middleware should call next() if user is an instructor', () => {
-        const req = {
-            isAuthenticated: () => true,      // Mocking user authentication
-            user: { user_type: 'instructor' } // Mocking user type as instructor
-        };
-        const res = {};
-        const next = jest.fn();
+  test("isInstructor middleware should call next() if user is an instructor", () => {
+    const req = {
+      isAuthenticated: () => true, // Mocking user authentication
+      user: { user_type: "instructor" }, // Mocking user type as instructor
+    };
+    const res = {};
+    const next = jest.fn();
 
-        isInstructor(req, res, next);
-        expect(next).toHaveBeenCalled();
-    });
+    isInstructor(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
 
-    test('isStudent middleware should call next() if user is a student', () => {
-        const req = {
-            isAuthenticated: () => true,      // Mocking user authentication
-            user: { user_type: 'student' } // Mocking user type as instructor
-        };
-        const res = {};
-        const next = jest.fn();
+  test("isStudent middleware should call next() if user is a student", () => {
+    const req = {
+      isAuthenticated: () => true, // Mocking user authentication
+      user: { user_type: "student" }, // Mocking user type as instructor
+    };
+    const res = {};
+    const next = jest.fn();
 
-        isStudent(req, res, next);
-        expect(next).toHaveBeenCalled();
-    });
+    isStudent(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
 
-    // TODO: Add access denied tests.
+  // TODO: Add access denied tests.
 });
