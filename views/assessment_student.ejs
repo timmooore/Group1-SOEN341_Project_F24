@@ -95,9 +95,30 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
+        <!-- Page Numbers -->
+        <div class="page-number">
+            Page <span id="currentPage">1</span> of <%= evaluations.length %>
+        </div>
+
+    </div>
     </div>
     </div>
 </div>
+
+<script>
+<!-- Script to update page number when carousel slides -->
+    const carouselElement = document.getElementById('evaluationCarousel');
+    const totalItems = <%= evaluations.length %>;
+    const currentPageElement = document.getElementById('currentPage');
+
+    carouselElement.addEventListener('slid.bs.carousel', function (event) {
+        const activeIndex = Array.from(carouselElement.querySelectorAll('.carousel-item')).indexOf(event.relatedTarget);
+        currentPageElement.textContent = activeIndex + 1;
+    });
+</script>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" 
 integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" 
 crossorigin="anonymous"></script>

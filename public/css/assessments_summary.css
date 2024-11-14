@@ -1,0 +1,51 @@
+body{
+    font-family: Arial,sans-serif;
+    background-color: #f4f4f4
+
+}
+
+table.table {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+table thead th {
+    background-color: #8a0000 !important;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 12px;
+}
+
+.table_header{
+    background-color: #8a0000;
+}
+
+table tbody tr:hover {
+    background-color: #f4f4f4;
+}
+
+table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.95rem;
+    padding: 12px;
+}
+
+/* Table zebra row */
+table tbody tr:nth-child(odd) {
+    background-color:  #ffffff;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #cacaca;
+}
+
+h1 {
+    color: black;
+    font-weight: bold;
+}
+
+
