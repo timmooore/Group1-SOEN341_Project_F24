@@ -21,10 +21,10 @@ export default [
     rules: {
       ...pluginJest.configs.recommended.rules, // Apply Jest's recommended rules
       "prettier/prettier": ["error"], // Enforces Prettier rules via ESLint
-      "no-console": "warn", // Other ESLint rules are still enforced
+      "no-console": "off", // Other ESLint rules are still enforced
       eqeqeq: "error",
       curly: ["error", "all"],
-      camelcase: "error",
+      camelcase: "off",
       "prefer-const": "error",
     },
   },

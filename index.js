@@ -97,7 +97,7 @@ app.post("/register", async (req, res, next) => {
     req.login(registeredUser, (err) => {
       if (err) return next(err); //Callback function if an error occurs
       //If they're an instructor, go to the instructor dashboard; otherwise, go to the student dashboard
-      if (req.user.user_type == "instructor") {
+      if (req.user.user_type === "instructor") {
         res.redirect("/instructor_index");
       } else {
         res.redirect("/student_index");
@@ -116,7 +116,7 @@ app.post(
   passport.authenticate("local", { failureRedirect: "/login" }),
   (req, res) => {
     //Login fix
-    if (req.user.user_type == "instructor") {
+    if (req.user.user_type === "instructor") {
       res.redirect("/instructor_index");
     } else {
       res.redirect("/student_index");
