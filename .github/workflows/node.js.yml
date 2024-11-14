@@ -34,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: npx eslint . # Adjust path if you want to lint only specific directories
+        run: npx eslint . --fix
 
   # Build project if required and run Jest test suite
   build-and-test:
