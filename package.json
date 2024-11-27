@@ -4,6 +4,7 @@
   "description": "Hey guys, this is Group 1's SOEN 341 Project.\r Hey guys, I'm modified this. Cool. \r CHECK OUT THIS CHANGE.",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "test": "cross-env NODE_ENV=test echo \"Running tests...\" && jest",
     "test1": "node test.js"
   },

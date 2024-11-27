@@ -16,7 +16,7 @@ const csv = require("csv-parser");
 const upload = multer({ dest: path.join(__dirname, "uploads") }); // Points to uploads folder for temporary storage of file uploads
 
 //Serves static files from 'public' directory
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 //MODELS
 const User = require("./models/user");
@@ -25,7 +25,11 @@ const Evaluation = require("./models/evaluation");
 
 //MIDDLEWARE
 //TO BE MODIFIED
-const { isLoggedIn, isInstructor, isStudent } = require("./middleware");
+const {
+  isLoggedIn,
+  isInstructor,
+  isStudent,
+} = require("./middlewares/middleware");
 
 //Connect to mongoose
 mongoose.connect("mongodb://localhost:27017/soen341project");
