@@ -1,4 +1,8 @@
-const { isLoggedIn, isInstructor, isStudent } = require("../middleware");
+const {
+  isLoggedIn,
+  isInstructor,
+  isStudent,
+} = require("../middlewares/middleware");
 
 describe("Middleware Tests", () => {
   test("isLoggedIn middleware should call next() if user is authenticated", () => {
