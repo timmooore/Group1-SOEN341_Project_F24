@@ -2,10 +2,7 @@ const mongoose = require("mongoose");
 const app = require("./app");
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/soen341project", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect("mongodb://localhost:27017/soen341project");
 
 //Mongoose's proposed db connection check
 const db = mongoose.connection;
