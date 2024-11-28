@@ -129,4 +129,44 @@ router.get("/search-students", isInstructor, async (req, res) => {
   }
 });
 
+router.get('/profile', isLoggedIn, async (req, res) => {
+      const currentUser = req.user;
+      res.render('profile', { currentUser }); //Don't need this, but just in case yk
+});
+
+router.post('/user/updatePassword', isLoggedIn, async (req, res) => {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    // Ensure the new password and confirmation match
+    if (newPassword !== confirmPassword) {
+        req.flash('error', 'New passwords do not match!');
+        return res.redirect('back');
+    }
+
+    try {
+        const user = await User.findById(req.user._id);
+        // Check current password
+        const isMatch = await user.authenticate(currentPassword);
+        if (!isMatch) {
+            req.flash('error', 'Current password is incorrect!');
+            return res.redirect('back');
+        }
+
+        // Set the new password
+        await user.setPassword(newPassword);
+        await user.save();
+
+        req.flash('success', 'Password updated successfully!');
+        if(req.user.user_type === 'student') {
+          res.redirect('/student_index');
+        } else {
+          res.redirect('/instructor_index');
+        }
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'Something went wrong. Please try again.');
+        res.redirect('back');
+    }
+});
+
 module.exports = router;

@@ -134,4 +134,31 @@ router.post("/teams/:teamId/add-student", isLoggedIn, isInstructor, async (req, 
   }
 });
 
+// Remove a student from a team
+router.post("/teams/:teamId/remove-student", async (req, res) => {
+  const { teamId } = req.params;
+  const { studentId } = req.body;
+
+  try {
+    const team = await Team.findById(teamId);
+    team.student_ids = team.student_ids.filter(id => id.toString() !== studentId);
+    await team.save();
+    res.status(200).send({ message: "Student removed successfully." });
+  } catch (err) {
+    res.status(500).send({ message: "Failed to remove student from the team." });
+  }
+});
+
+// Delete a team
+router.delete("/teams/:teamId/delete", async (req, res) => {
+  const { teamId } = req.params;
+
+  try {
+    await Team.findByIdAndDelete(teamId);
+    res.status(200).send({ message: "Team deleted successfully." });
+  } catch (err) {
+    res.status(500).send({ message: "Failed to delete the team." });
+  }
+});
+
 module.exports = router;
