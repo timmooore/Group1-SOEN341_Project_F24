@@ -6,10 +6,11 @@ body{
 /* Style the container for the search bar and results */
 .search-container {
     position: relative;
-    max-width: 400px; /* Set max width for better UX */
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
   }
-  
-  /* Style the search bar */
+
   .search-bar {
     width: 100%;
     padding: 10px;
@@ -18,14 +19,13 @@ body{
     border-radius: 4px;
     outline: none;
   }
-  
-  /* Focused state for the search bar */
+
   .search-bar:focus {
     border-color: #8a0000;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   }
   
-  /* Style the results list */
+
   .results-list {
     list-style: none;
     margin: 0;
@@ -33,16 +33,15 @@ body{
     border: 1px solid #ccc;
     border-radius: 0 0 4px 4px;
     border-top: none;
-    max-height: 200px; /* Limit height of dropdown */
-    overflow-y: auto; /* Scroll if too many results */
+    max-height: 200px;
+    overflow-y: auto;
     background-color: #fff;
     position: absolute;
-    width: 100%; /* Make it as wide as the input */
-    z-index: 1000; /* Ensure it appears above other content */
+    width: 100%;
+    z-index: 1000;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Style individual result items */
+
   .result-item {
     padding: 10px;
     border-bottom: 1px solid #eee;
@@ -50,13 +49,11 @@ body{
     font-size: 16px;
     transition: background-color 0.3s;
   }
-  
-  /* Hover effect for result items */
+
   .result-item:hover {
     background-color: #f0f0f0;
   }
-  
-  /* Last result item doesn't need a border */
+
   .result-item:last-child {
     border-bottom: none;
   }
@@ -69,7 +66,7 @@ body{
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   .student-item:hover {
-      box-shadow: 0px 4px 8px rgba(138, 0, 0, 0.6);
+      box-shadow: 0px 4px 8px rgba(140, 0, 0, 0.6);
   }
   .current-team-student {
       font-weight: bold;
@@ -96,4 +93,22 @@ body{
 .current-team-student:hover {
   background-color: #d4e0ff; /* Changes background on hover */
   cursor: pointer;           /* Changes cursor to pointer */
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #8a0000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #99192b;
 }
