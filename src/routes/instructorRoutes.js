@@ -4,15 +4,6 @@ const Team = require("../models/team");
 const Class = require('../models/class');
 const router = express.Router();
 
-router.get("/instructor_index", isLoggedIn, isInstructor, async (req, res) => {
-  try {
-    const teams = await Team.find({ instructor_id: req.user._id });
-    res.render("instructor_index", { teams });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
 // Display the class creation form
 router.get('/instructor/classes/new', isInstructor, (req, res) => {
   res.render('new-class');
@@ -30,7 +21,7 @@ router.post('/instructor/classes/new', isInstructor, async (req, res) => {
       });
       await newClass.save();
 
-      res.redirect('/instructor/classes'); // Redirect to the list of classes
+      res.redirect('/instructor_index'); // Redirect to the list of classes
   } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
@@ -38,7 +29,7 @@ router.post('/instructor/classes/new', isInstructor, async (req, res) => {
 });
 
 // Display the list of all classes
-router.get('/instructor/classes', isInstructor, async (req, res) => {
+router.get('/instructor_index', isLoggedIn, isInstructor, async (req, res) => {
   try {
       const classes = await Class.find({ instructor_id: req.user._id });
       res.render('classes', { classes });
