@@ -1,0 +1,189 @@
+/* Page Styling */
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #555;
+    margin-bottom: 20px;
+    text-decoration: underline;
+}
+
+/* Form Styling */
+.assessment {
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Label Styling */
+label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Input Range Styling */
+input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+    appearance: none;
+    height: 5px;
+    background: #ddd;
+    border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #8a0000;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #8a0000;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px; /* Adjusts spacing between slider and numbers */
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Textarea Styling */
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+/* Button Styling */
+.submit-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #8a0000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #99192b;
+}
+
+/* Spacing Between Form Elements */
+form div {
+    margin-bottom: 15px;
+}
+
+.card {
+    border: 2px solid #8a0000;
+    border-radius: 10px;
+}
+
+.card-body {
+    background-color: white;
+    padding: 20px;
+}
+
+
+table.table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table thead th {
+    background-color: #8a0000 !important;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #8a0000;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+
+#evaluationCarousel:hover .carousel-control-prev-icon,
+#evaluationCarousel:hover .carousel-control-next-icon {
+    opacity: 1;
+}
+
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev {
+    left: -30px;
+}
+
+
+.carousel-control-next {
+    right: -30px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(138, 0, 0, 0.8);
+    border-radius: 50%;
+    padding: 9px;
+}
+
+.carousel-item {
+    padding: 20px;
+}
+
+.page-number {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    color: black;
+}
+
+button.btn-primary {
+    background-color: #8a0000 !important;
+    border-color: #6b0000 !important;
+    color: white !important;
+}
+button.btn-primary:hover {
+    background-color: #6b0000 !important;
+}

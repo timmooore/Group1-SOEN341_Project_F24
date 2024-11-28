@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/instructor_home.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <title>Student Dashboard</title>
+</head>
+<body>
+<%- include('partials/student_navbar') %>
+<h1>Welcome <%= currentUser.username %>!</h1>
+    
+<h2>Your Teams:</h2>
+
+<section class="team_roster">
+<% if (teams.length > 0) { %>
+  <ul>
+    <% teams.forEach(team => { %>
+      <li>
+        <h2>Team Name: <%= team.team_name %></h2>
+        <p>Team ID: <%= team._id %></p>
+        <p>Number of Students: <%= team.student_ids.length %></p>
+        <form action="/teams/<%= team._id %>" method="GET">
+          <button>View team</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p>You are not a part of any teams</p>
+<% } %>
+</section>
+
+</body>
+</html>
