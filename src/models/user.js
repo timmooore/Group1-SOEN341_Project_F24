@@ -5,14 +5,17 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const UserSchema = new Schema({
   user_type: {
     type: String,
-    enum: ["student", "instructor"], //Only allows users to be "students" or "instructors"
+    enum: ["student", "instructor"], // Only allows users to be "students" or "instructors"
     required: true,
   },
+  classes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Class", // References to the classes the user belongs to
+    },
+  ],
 });
 
-/* Note: 
-No need to specify username or password, since passport does it for us.
-Passport also makes sure the usernames are unique & offers several methods onto our Schema */
 UserSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", UserSchema);

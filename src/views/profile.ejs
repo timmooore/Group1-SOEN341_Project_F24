@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> 
+</head>
+<body>
+    <% if (currentUser.user_type === 'student') { %>
+        <%- include('partials/student_start_navbar') %>
+    <% } else { %>
+        <%- include('partials/start_navbar') %>
+    <% } %>
+    <div class="container mt-4">
+        <h2>Profile</h2>
+        <p>Welcome, <%= currentUser.username %>!</p>
+
+        <!-- Update Password -->
+        <form class="mt-4" id="updatePasswordForm" method="POST" action="/user/updatePassword">
+            <div class="mb-3">
+                <label for="currentPassword" class="form-label"><b>Current Password:</b></label>
+                <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="mb-3">
+                <label for="newPassword" class="form-label"><b>New Password:</b></label>
+                <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label"><b>Confirm New Password:</b></label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+    </div>
+</body>
+</html>

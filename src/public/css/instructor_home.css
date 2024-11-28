@@ -125,3 +125,14 @@ h1 {
         width: 90%;
     }
 }
+
+.button {
+    background-color: #8a0000;
+    color: white;
+    display: flex;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

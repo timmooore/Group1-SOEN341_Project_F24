@@ -44,7 +44,15 @@ button {
     margin-top: 10px;
     margin-bottom: 10px;
     cursor: pointer;
+    background-color: #8a0000;
+    color: white;
+    transition: background-color 0.3s ease;
+    padding: 12px 24px; /* Increases size */
+    font-size: 16px; /* Optional, increases text size */
+    border-radius: 10px; /* Makes the edges rounded */
+    border: none; /* Removes default border */
 }
+
 
 .wrapper{
     padding-left: 240px;

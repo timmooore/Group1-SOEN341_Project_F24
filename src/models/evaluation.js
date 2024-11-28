@@ -33,18 +33,21 @@ const EvaluationSchema = new Schema({
     required: true,
     default: 0,
   },
+  class_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Class", // Reference to the class this evaluation belongs to
+    required: true,
+  },
 });
 
 // Pre-save hook to calculate average_score
 EvaluationSchema.pre("save", function (next) {
-  // Calculate the average of the four ratings
   const total =
     this.cooperation.rating +
     this.conceptual_contribution.rating +
     this.practical_contribution.rating +
     this.work_ethic.rating;
-  const average = total / 4;
-  this.average_score = Math.round(average * 10) / 10;
+  this.average_score = Math.round((total / 4) * 10) / 10; // Round to one decimal place
   next();
 });
 

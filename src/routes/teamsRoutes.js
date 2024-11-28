@@ -2,77 +2,219 @@ const express = require("express");
 const { isLoggedIn, isInstructor } = require("../middlewares/middleware");
 const Team = require("../models/team");
 const User = require("../models/user");
+const Class = require("../models/class"); // Import the Class model
 const router = express.Router();
 
-router.post("/teams/new", isLoggedIn, isInstructor, async (req, res) => {
-  try {
-    const { team_name } = req.body;
-
-    // No need to fetch the user again, req.user already has the authenticated user info
-    const newTeam = new Team({
-      team_name: team_name,
-      instructor_id: req.user._id, // Use req.user._id directly here
-      student_ids: [],
-    });
-
-    await newTeam.save();
-    res.redirect("/instructor_index");
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// View page for a given team (for students, to be honest)
-router.get("/teams/:teamId", isLoggedIn, async (req, res) => {
-  try {
-    // Fetch the team by its ID and populate the students in the team
-    const team = await Team.findById(req.params.teamId).populate("student_ids");
-    res.render("student_team_management", {
-      team,
-      currentUserId: req.user._id,
-    });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-router.get(
-  "/teams/:teamId/edit",
+// Route to create a new team for a specific class
+router.post(
+  "/classes/:classId/teams/new",
   isLoggedIn,
   isInstructor,
   async (req, res) => {
     try {
-      // Fetch the team by its ID and populate the students in the team
-      const team = await Team.findById(req.params.teamId).populate(
-        "student_ids",
-      );
+      const { team_name } = req.body;
+      const { classId } = req.params;
 
-      // Fetch all users where user_type is 'student'
-      const allStudents = await User.find({ user_type: "student" });
+      // Validate that the class exists and is managed by the current instructor
+      const currentClass = await Class.findOne({
+        _id: classId,
+        instructor_id: req.user._id,
+      });
+      if (!currentClass) {
+        return res
+          .status(403)
+          .json({ error: "Unauthorized to manage this class" });
+      }
 
-      // Render the 'edit_team' view, passing both the team and all students
-      res.render("edit_team", { team, allStudents });
+      // Create the new team and associate it with the class
+      const newTeam = new Team({
+        team_name,
+        instructor_id: req.user._id,
+        class_id: classId, // Associate the team with the class
+        student_ids: [],
+      });
+
+      await newTeam.save();
+      res.redirect(`/classes/${classId}/teams`);
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
   },
 );
 
-//Add student to a team from the instructor team_edit page
-router.post("/teams/:teamId/add-student", isInstructor, async (req, res) => {
-  try {
-    const { studentId } = req.body;
-    const team = await Team.findById(req.params.teamId);
+// Route to view teams for a specific class (index page)
+router.get(
+  "/classes/:classId/teams",
+  isLoggedIn,
+  isInstructor,
+  async (req, res) => {
+    try {
+      const { classId } = req.params;
 
-    // Add the student to the team's student_ids array
-    if (!team.student_ids.includes(studentId)) {
-      team.student_ids.push(studentId);
-      await team.save();
+      // Validate that the class exists and is managed by the current instructor
+      const currentClass = await Class.findOne({
+        _id: classId,
+        instructor_id: req.user._id,
+      });
+      if (!currentClass) {
+        return res
+          .status(403)
+          .json({ error: "Unauthorized to manage this class" });
+      }
+
+      // Fetch all teams for the specified class
+      const teams = await Team.find({ class_id: classId }).populate(
+        "student_ids",
+      );
+
+      res.render("class-teams", { teams, classId, currentUser: req.user });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  },
+);
+
+// View page for a specific team (students can view the team they are in)
+router.get("/teams/:classId/:teamId", isLoggedIn, async (req, res) => {
+  try {
+    const { classId, teamId } = req.params;
+
+    // Validate the class exists
+    const currentClass = await Class.findById(classId);
+    if (!currentClass) {
+      return res.status(404).json({ error: "Class not found" });
     }
 
-    res.status(200).json({ message: "Student added successfully" });
+    // Fetch the team details
+    const team = await Team.findById(teamId).populate("student_ids");
+    if (!team) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+
+    res.render("student_team_management", {
+      team,
+      classId,
+      currentUserId: req.user._id,
+    });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    console.error(e);
+    res
+      .status(500)
+      .json({ error: "An error occurred while loading the team page." });
+  }
+});
+
+// Route to edit a specific team
+router.get(
+  "/teams/:classId/:teamId/edit",
+  isLoggedIn,
+  isInstructor,
+  async (req, res) => {
+    try {
+      const { classId, teamId } = req.params;
+
+      // Validate the class exists and the instructor has access
+      const currentClass = await Class.findOne({
+        _id: classId,
+        instructor_id: req.user._id,
+      });
+      if (!currentClass) {
+        return res
+          .status(403)
+          .json({ error: "Unauthorized to edit teams in this class" });
+      }
+
+      // Fetch the team details
+      const team = await Team.findOne({
+        _id: teamId,
+        class_id: classId,
+      }).populate("student_ids");
+      if (!team) {
+        return res.status(404).json({ error: "Team not found" });
+      }
+
+      // Fetch all students
+      const allStudents = await User.find({ user_type: "student" });
+
+      res.render("edit_team", { team, allStudents, classId });
+    } catch (e) {
+      console.error(e);
+      res
+        .status(500)
+        .json({ error: "An error occurred while loading the edit team page." });
+    }
+  },
+);
+
+// Add student to a specific team from the edit team page
+router.post(
+  "/teams/:teamId/add-student",
+  isLoggedIn,
+  isInstructor,
+  async (req, res) => {
+    try {
+      const { studentId } = req.body;
+      const team = await Team.findById(req.params.teamId);
+
+      if (!team) {
+        return res.status(404).json({ error: "Team not found" });
+      }
+
+      // Ensure the instructor has access to this team
+      const currentClass = await Class.findOne({
+        _id: team.class_id,
+        instructor_id: req.user._id,
+      });
+      if (!currentClass) {
+        return res
+          .status(403)
+          .json({ error: "Unauthorized to add students to this team" });
+      }
+
+      // Add the student to the team's student_ids array
+      if (!team.student_ids.includes(studentId)) {
+        team.student_ids.push(studentId);
+        await team.save();
+      }
+
+      res.status(200).json({
+        message: "Student added successfully",
+        classId: team.class_id,
+      });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  },
+);
+
+// Remove a student from a team
+router.post("/teams/:teamId/remove-student", async (req, res) => {
+  const { teamId } = req.params;
+  const { studentId } = req.body;
+
+  try {
+    const team = await Team.findById(teamId);
+    team.student_ids = team.student_ids.filter(
+      (id) => id.toString() !== studentId,
+    );
+    await team.save();
+    res.status(200).send({ message: "Student removed successfully." });
+  } catch {
+    res
+      .status(500)
+      .send({ message: "Failed to remove student from the team." });
+  }
+});
+
+// Delete a team
+router.delete("/teams/:teamId/delete", async (req, res) => {
+  const { teamId } = req.params;
+
+  try {
+    await Team.findByIdAndDelete(teamId);
+    res.status(200).send({ message: "Team deleted successfully." });
+  } catch {
+    res.status(500).send({ message: "Failed to delete the team." });
   }
 });
 

@@ -15,7 +15,7 @@
     <div class="container mt-3">
     <h1>Detailed Assessments</h1>
     <% studentsWithEvaluations.forEach(({ student, evaluations }) => { %>
-        <div class="card card-body">
+        <div class="card card-body mb-4">
             <h2><%= student.username %></h2>
 
             <% if (evaluations.length === 0) { %>
@@ -41,31 +41,31 @@
                                 <td><%= evaluation.practical_contribution.rating %></td>
                                 <td><%= evaluation.work_ethic.rating %></td>
                                 <td><%= evaluation.average_score %></td>
-                                <td><button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#comments<%= index %>" aria-expanded="false" aria-controls="#comments<%= index %>">
-                                  See Comments
-                              </button></td>
+                                <td>
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-<%= student._id %>-<%= index %>" aria-expanded="false" aria-controls="comments-<%= student._id %>-<%= index %>">
+                                        See Comments
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
-                              <td colspan="8">
-                              <div class="collapse" id="comments<%= index %>">
-                                <div class="card card-body">
-                                <table>
-                                  <tr>
-                                    <td><strong>Cooperation:</strong> <%= evaluation.cooperation.feedback || 'No feedback' %></td>
-                                    <td><strong>Conceptual Contribution:</strong> <%= evaluation.conceptual_contribution.feedback || 'No feedback' %></td>
-                                    <td><strong>Practical Contribution:</strong> <%= evaluation.practical_contribution.feedback || 'No feedback' %></td>
-                                    <td><strong>Work Ethic:</strong> <%= evaluation.work_ethic.feedback || 'No feedback' %></td>
-                                  </tr>
-                                </table>
-                                </div>
-                            </div>
-                            </td>
-                        </tr>
+                                <td colspan="6">
+                                    <div class="collapse" id="comments-<%= student._id %>-<%= index %>">
+                                        <div class="card card-body">
+                                            <table class="table">
+                                                <tr>
+                                                    <td><strong>Cooperation:</strong> <%= evaluation.cooperation.feedback || 'No feedback' %></td>
+                                                    <td><strong>Conceptual Contribution:</strong> <%= evaluation.conceptual_contribution.feedback || 'No feedback' %></td>
+                                                    <td><strong>Practical Contribution:</strong> <%= evaluation.practical_contribution.feedback || 'No feedback' %></td>
+                                                    <td><strong>Work Ethic:</strong> <%= evaluation.work_ethic.feedback || 'No feedback' %></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                         <% }); %>
                     </tbody>
                 </table>
-
-                
             <% } %>
         </div>
     <% }); %>

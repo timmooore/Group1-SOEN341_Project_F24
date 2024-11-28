@@ -11,9 +11,9 @@
 </head>
 <body>
 <% if(currentUser.user_type == 'student') { %>
-<%- include('partials/student_navbar') %>
+<%- include('partials/student_navbar', { classId: classId }) %>
 <% } else { %>
-<%- include('partials/instructor_navbar') %>
+<%- include('partials/instructor_navbar', { classId: classId }) %>
 <% } %>
 
 <div class="container mt-3">

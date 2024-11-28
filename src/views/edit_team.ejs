@@ -10,20 +10,26 @@
 <body>
 <%- include('partials/instructor_navbar') %>    
 <h1>Edit Team: <%= team.team_name %></h1>
-
 <!-- Display current team students -->
 <section class="team-members">
 <h2>Current Students in this Team</h2>
 <ul>
   <% team.student_ids.forEach(student => { %>
-    <li class="current-team-student"><%= student.username %></li>
+    <li class="current-team-student">
+      <%= student.username %>
+      <!-- Remove button for each student -->
+      <button class="remove-btn" onclick="removeFromTeam('<%= student._id %>')">Remove</button>
+    </li>
   <% }) %>
 </ul>
 </section>
-
+<!-- Delete team button -->
+<section class="delete-team">
+  <button class="btn btn-danger" onclick="deleteTeam()">Delete Team</button>
+</section>
 <!-- Search container for search bar and results -->
 <section class="search">
-<h2> Search for Students to Add</h2>
+<h2>Search for Students to Add</h2>
 <div class="search-container">
     <input 
       type="text" 
@@ -32,13 +38,11 @@
       placeholder="Search for students" 
       oninput="filterStudents()"
     >
-    
-    <!-- Results will be displayed below the input -->
     <ul id="studentResults" class="results-list"></ul>
 </div>
 </section>
 
-<!-- Inline script for filtering students and adding to the team -->
+<!-- Inline script for handling actions -->
 <script>
   const allStudents = <%- JSON.stringify(allStudents) %>; // Pass all students to JS
   const currentTeamStudentIds = <%- JSON.stringify(team.student_ids.map(s => s._id)) %>; // Get IDs of current team students
@@ -48,21 +52,17 @@
     const resultsList = document.getElementById('studentResults');
     resultsList.innerHTML = ''; // Clear previous results
 
-    // Filter students by the input query, and exclude those already in the team
     const filteredStudents = allStudents.filter(student => 
       student.username.toLowerCase().includes(query) && !currentTeamStudentIds.includes(student._id)
     );
 
-    // Display the filtered student list
     filteredStudents.forEach(student => {
       const li = document.createElement('li');
       li.textContent = student.username;
       li.classList.add('student-item');
-      li.dataset.studentId = student._id; // Store the student ID in the data attribute
+      li.dataset.studentId = student._id;
 
-      // Add an event listener to handle adding the student to the team
-      li.addEventListener('click', () => addToTeam(student._id)); // Correctly pass the student ID
-
+      li.addEventListener('click', () => addToTeam(student._id));
       resultsList.appendChild(li);
     });
   }
@@ -70,20 +70,14 @@
   async function addToTeam(studentId) {
     try {
       const teamId = '<%= team._id %>';
-
-      // Send a POST request to add the student to the team
       const res = await fetch(`/teams/${teamId}/add-student`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ studentId }) //Sends the student ID in the request body as JSON
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId }),
       });
-      
-      //Change this later; I fucking hate alerts => it should be flash
+
       if (res.ok) {
-        alert('Student successfully added to the team!');
-        location.reload(); // Reload the page to reflect changes
+        location.reload();
       } else {
         const error = await res.json();
         alert(`Error adding student: ${error.message}`);
@@ -93,7 +87,47 @@
       alert('An error occurred while adding the student.');
     }
   }
-</script>
 
+  async function removeFromTeam(studentId) {
+    try {
+      const teamId = '<%= team._id %>';
+      const res = await fetch(`/teams/${teamId}/remove-student`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId }),
+      });
+
+      if (res.ok) {
+        location.reload();
+      } else {
+        const error = await res.json();
+        alert(`Error removing student: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while removing the student.');
+    }
+  }
+
+  async function deleteTeam() {
+    try {
+      const teamId = '<%= team._id %>';
+      const res = await fetch(`/teams/${teamId}/delete`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        alert('Team successfully deleted!');
+        window.location.href = '/instructor_index'; // Redirect to the instructor dashboard
+      } else {
+        const error = await res.json();
+        alert(`Error deleting team: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while deleting the team.');
+    }
+  }
+</script>
 </body>
 </html>

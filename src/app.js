@@ -3,7 +3,7 @@ const path = require("path");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const session = require("express-session");
-// const flash = require('connect-flash'); // TODO: Will use this later, but we haven't set much up yet
+const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
@@ -41,6 +41,8 @@ app.use(session(sessionConfig));
 
 app.use(passport.initialize());
 app.use(passport.session()); //Be sure to 'use' this after we use 'session'
+// Middleware for flash messages
+app.use(flash());
 
 // Telling passport to use the passport-given authentication
 passport.use(new LocalStrategy(User.authenticate()));
@@ -57,10 +59,8 @@ app.use((req, res, next) => {
   //Note that res.locals is meant for data passed to the "views" folder. It's not automatically
   // available in all routes!
   res.locals.currentUser = req.user;
-  /* Setting this up, later, once we're more ahead.
-    res.locals.success = req.flash('success'); //Flashes a message if the req succeeds (The specific messages are set up in the routes)
-    res.locals.error = req.flash('error'); //Flashes a message if the req fails (The specific messages are set up in the routes)
-    */
+  res.locals.success = req.flash("success"); //Flashes a message if the req succeeds (The specific messages are set up in the routes)
+  res.locals.error = req.flash("error"); //Flashes a message if the req fails (The specific messages are set up in the routes)
   next();
 });
 

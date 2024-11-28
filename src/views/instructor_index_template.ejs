@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Dashboard</title>
+    <link rel="stylesheet" href="css/instructor_home.css">
+    <link rel="stylesheet" href="css/navbar.css">
+</head>
+
+
+<body>
+
+<%- include('partials/instructor_navbar') %>
+
+    <h1>Dashboard</h1>
+    <form class="new_team_form" action="/teams/new" method="POST">
+        <div class="form_group">
+            <label for="name">Enter team name: </label>
+            <input type="text" name="team_name" id="team_name" placeholder="Team name" required>
+        </div>
+        <button>Create new team</button>
+    </form>
+
+<section class="team_roster">
+    <h2>Teams Managed by <%= currentUser.username %></h2>
+
+    <% if (teams.length > 0) { %>
+        <ul>
+            <% teams.forEach(team => { %>
+                <li>
+                    <h2>Team Name: <%= team.team_name %></h2>
+                    <p>Team ID: <%= team._id %></p>
+                    <p>Number of Students: <%= team.student_ids.length %></p>
+                    <form action="/teams/<%= team._id %>/edit">
+                        <button>Edit team</button>
+                    </form>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>You are not managing any teams currently.</p>
+    <% } %>
+</section>
+
+</body>
+</html>
