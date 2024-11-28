@@ -101,9 +101,15 @@ The second sprint focuses on the development of the basic features and interface
 
 ## Sprint 3: [To Be Defined]
 
-Information for Sprint 3 will be added when instructions are available.
+### Sprint Description
 
+The third sprint focuses on implementing view pages for the instructor to view student assessments.
+Moreover, another key area of focus is implementing unit tests to evaluate the functional elements from Sprints 1 and 2.
+### Activities
 
+1. Design and develop instructor interfaces to view student evaluations.
+2. Design and develop student interface so a given student can see evaluations done for them (by their peers).
+3. Implement unit tests for Sprint 1 and 2's functional elements (User model, Team model, Login/Register forms, ...)
 
 ## Sprint 4: [To Be Defined]
 
