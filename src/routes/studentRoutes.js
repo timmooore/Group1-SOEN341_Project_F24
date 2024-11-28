@@ -3,54 +3,104 @@ const { isLoggedIn, isStudent } = require("../middlewares/middleware");
 const User = require("../models/user");
 const Team = require("../models/team");
 const Evaluation = require("../models/evaluation");
+const Class = require("../models/class");
 const router = express.Router();
 
 router.get("/student_index", isLoggedIn, isStudent, async (req, res) => {
   try {
-    const teams = await Team.find({ student_ids: req.user._id });
-    res.render("student_index", { teams });
-    //res.render('student_index', { teams });
+    // Find all classes where the student is part of at least one team
+    const classes = await Class.find({
+      _id: { $in: (await Team.find({ student_ids: req.user._id }).distinct("class_id")) },
+    });
+
+    res.render("student_index", { classes });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "An error occurred while fetching your classes." });
+  }
+});
+
+// Student index page to view all teams they are part of in a class
+router.get("/student/:classId/index", isLoggedIn, isStudent, async (req, res) => {
+  try {
+    const { classId } = req.params;
+
+    // Validate the class exists
+    const currentClass = await Class.findById(classId);
+    if (!currentClass) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+
+    // Fetch teams the student is part of within this class
+    const teams = await Team.find({ class_id: classId, student_ids: req.user._id });
+
+    res.render("student_class_teams", { teams, classId, currentUser: req.user });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "An error occurred while fetching your teams." });
+  }
+});
+
+
+// Route for students to manage teams in a specific class
+router.get("/student/:classId/team_management", isLoggedIn, isStudent, async (req, res) => {
+  try {
+    const { classId } = req.params;
+
+    // Validate the class exists
+    const currentClass = await Class.findById(classId);
+    if (!currentClass) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+
+    // Fetch teams the student is part of within this class
+    const teams = await Team.find({ class_id: classId, student_ids: req.user._id });
+
+    res.render("student_team_management", { teams, classId });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-// Will delete this, soon
+// Route to render the assessment page for a student
 router.get(
-  "/student_team_management",
+  "/student/:classId/assessment/:evaluatorId/:evaluateeId",
   isLoggedIn,
   isStudent,
   async (req, res) => {
     try {
-      const teams = await Team.find({ student_ids: req.user._id });
-      res.render("student_team_management", { teams });
-    } catch (e) {
-      res.status(500).json({ error: e.message });
-    }
-  },
-);
+      const { classId } = req.params;
 
-// Student id - evaluator; student id - evaluatee
-router.get(
-  "/students/:evaluatorId/assessment/:evaluateeId",
-  isLoggedIn,
-  isStudent,
-  async (req, res) => {
-    try {
+      // Validate the class exists
+      const currentClass = await Class.findById(classId);
+      if (!currentClass) {
+        return res.status(404).json({ error: "Class not found" });
+      }
+
       const evaluatee = await User.findById(req.params.evaluateeId);
-      res.render("assessment", { currentUser: req.user, evaluatee });
+      res.render("assessment", { currentUser: req.user, evaluatee, classId });
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
-  },
+  }
 );
 
+// Route to submit an assessment
 router.post(
-  "/students/:evaluatorId/assessment/:evaluateeId",
+  "/student/:classId/assessment/:evaluatorId/:evaluateeId",
   isLoggedIn,
   isStudent,
   async (req, res) => {
     try {
+      const { classId, evaluatorId, evaluateeId } = req.params;
+
+      // Validate the class exists
+      const currentClass = await Class.findById(classId);
+      if (!currentClass) {
+        return res.status(404).json({ error: "Class not found" });
+      }
+
+      // Extract ratings and feedback from the request body
       const {
         cooperation,
         cooperation_feedback,
@@ -62,9 +112,11 @@ router.post(
         work_feedback,
       } = req.body;
 
+      // Create a new evaluation
       const newEvaluation = new Evaluation({
-        evaluator: req.params.evaluatorId,
-        evaluatee: req.params.evaluateeId,
+        evaluator: evaluatorId,
+        evaluatee: evaluateeId,
+        class_id: classId, // Include classId in the evaluation
         cooperation: { rating: cooperation, feedback: cooperation_feedback },
         conceptual_contribution: {
           rating: conceptual_contribution,
@@ -78,18 +130,24 @@ router.post(
       });
 
       await newEvaluation.save();
-      res.redirect("/student_index");
+
+      // Redirect back to the student's dashboard for the class
+      res.redirect(`/student/${classId}/index`);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      console.error(e);
+      res.status(500).json({ error: "An error occurred while submitting the assessment." });
     }
-  },
+  }
 );
 
+// Route to confirm an assessment
 router.get(
-  "/students/:evaluatorId/assessment/:evaluateeId/confirm",
+  "/student/:classId/assessment/:evaluatorId/:evaluateeId/confirm",
   isLoggedIn,
   isStudent,
   (req, res) => {
+    const { classId } = req.params;
+
     const {
       cooperation,
       cooperation_feedback,
@@ -112,8 +170,9 @@ router.get(
       practical_feedback,
       work_ethic,
       work_feedback,
+      classId,
     });
-  },
+  }
 );
 
 module.exports = router;

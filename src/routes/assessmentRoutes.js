@@ -2,37 +2,72 @@ const express = require("express");
 const { isLoggedIn, isInstructor } = require("../middlewares/middleware");
 const User = require("../models/user");
 const Evaluation = require("../models/evaluation");
+const Class = require("../models/class");
 const router = express.Router();
 
 //Instructor Assessment View Page
 router.get(
-  "/assessments-instructor",
+  "/assessments-instructor/:classId",
   isLoggedIn,
   isInstructor,
   async (req, res) => {
     try {
-      // Fetch all users where user_type is 'student'
-      const allStudents = await User.find({ user_type: "student" });
+      const { classId } = req.params;
 
-      res.render("instructor_assessments_view", { allStudents });
+      // Validate the class exists
+      const currentClass = await Class.findById(classId);
+      if (!currentClass) {
+        return res.status(404).send("Class not found");
+      }
+
+      // Ensure the class is linked to the current instructor
+      if (!currentClass.instructor_id.equals(req.user._id)) {
+        return res.status(403).send("You are not authorized to view this class.");
+      }
+
+      // Fetch unique evaluatees from evaluations for the class
+      const evaluations = await Evaluation.find({ class_id: classId });
+      const studentIds = [...new Set(evaluations.map((eval) => eval.evaluatee))];
+
+      // Fetch student details for those evaluatees
+      const allStudents = await User.find({
+        _id: { $in: studentIds },
+        user_type: "student",
+      });
+
+      res.render("instructor_assessments_view", { allStudents, classId });
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      console.error(e);
+      res.status(500).json({ error: "An error occurred while loading the page." });
     }
   },
 );
-//See a particular student's assessment
-router.get("/assessments/:studentId", isLoggedIn, async (req, res) => {
+
+// See a particular student's assessments for a specific class
+router.get("/assessments/:classId/:studentId", isLoggedIn, async (req, res) => {
   try {
-    const student = await User.findById(req.params.studentId); // Find the student
+    const { classId, studentId } = req.params;
+
+    // Validate the class exists
+    const currentClass = await Class.findById(classId);
+    if (!currentClass) {
+      return res.status(404).send("Class not found");
+    }
+
+    // Find the student
+    const student = await User.findById(studentId);
     if (!student) {
       return res.status(404).send("Student not found");
     }
 
-    // Find all evaluations where the student is the evaluatee
-    const evaluations = await Evaluation.find({ evaluatee: student._id });
+    // Find all evaluations for the student within the current class
+    const evaluations = await Evaluation.find({
+      evaluatee: student._id,
+      class_id: classId,
+    });
 
     if (!evaluations || evaluations.length === 0) {
-      return res.render("assessments_error", { student });
+      return res.render("assessments_error", { student, classId });
     }
 
     // Calculate the totals and count
@@ -71,12 +106,13 @@ router.get("/assessments/:studentId", isLoggedIn, async (req, res) => {
       averageScore: (totalScores.averageScore / totalScores.count).toFixed(1),
     };
 
-    // Respond with the evaluations and their averages
+    // Render the assessments page
     res.render("assessment_student", {
       currentUser: req.user,
       student,
       evaluations,
       averages,
+      classId,
     });
   } catch (e) {
     console.error(e);
@@ -84,27 +120,45 @@ router.get("/assessments/:studentId", isLoggedIn, async (req, res) => {
   }
 });
 
+
 //Detailed Assessments
 router.get(
-  "/assessments-detailed",
+  "/assessments-detailed/:classId",
   isLoggedIn,
   isInstructor,
   async (req, res) => {
     try {
-      // Fetch all students
-      const students = await User.find({ user_type: "student" });
+      const { classId } = req.params;
 
-      // Fetch evaluations for each student without populating evaluator
+      // Validate the class exists
+      const currentClass = await Class.findById(classId);
+      if (!currentClass) {
+        return res.status(404).send("Class not found");
+      }
+
+      // Fetch unique evaluatees from evaluations for the class
+      const evaluations = await Evaluation.find({ class_id: classId });
+      const studentIds = [...new Set(evaluations.map((eval) => eval.evaluatee))];
+
+      // Fetch student details for those evaluatees
+      const students = await User.find({
+        _id: { $in: studentIds },
+        user_type: "student",
+      });
+
+      // Fetch evaluations for each student
       const studentsWithEvaluations = await Promise.all(
         students.map(async (student) => {
-          const evaluations = await Evaluation.find({ evaluatee: student._id });
-          return { student, evaluations };
+          const studentEvaluations = evaluations.filter(
+            (eval) => eval.evaluatee.toString() === student._id.toString(),
+          );
+          return { student, evaluations: studentEvaluations };
         }),
       );
 
-      // Render the page with the students and evaluations
-      res.render("assessments_detailed", { studentsWithEvaluations });
+      res.render("assessments_detailed", { studentsWithEvaluations, classId });
     } catch (e) {
+      console.error(e);
       res.status(500).json({ error: e.message });
     }
   },
@@ -112,43 +166,79 @@ router.get(
 
 //Summarized Assessments
 router.get(
-  "/assessments-summary",
+  "/assessments-summary/:classId",
   isLoggedIn,
   isInstructor,
   async (req, res) => {
     try {
-      //Aggregate the average ratings and scores for each student
-      const summary = await Evaluation.aggregate([
-        {
-          $group: {
-            _id: "$evaluatee", // Group by evaluatee (student)
-            averageCooperation: { $avg: "$cooperation.rating" },
-            averageConceptual: { $avg: "$conceptual_contribution.rating" },
-            averagePractical: { $avg: "$practical_contribution.rating" },
-            averageWorkEthic: { $avg: "$work_ethic.rating" },
-            overallAverageScore: { $avg: "$average_score" },
-          },
-        },
-      ]);
+      const { classId } = req.params;
 
-      //Populate student data for the summary
-      const populatedSummary = await Promise.all(
-        summary.map(async (record) => {
-          const student = await User.findById(record._id);
-          return {
+      // Validate the class exists
+      const currentClass = await Class.findById(classId);
+      if (!currentClass) {
+        return res.status(404).send("Class not found");
+      }
+
+      // Ensure the class is linked to the current instructor
+      if (!currentClass.instructor_id.equals(req.user._id)) {
+        return res.status(403).send("You are not authorized to view this class.");
+      }
+
+      // Fetch unique evaluatee IDs from evaluations for the class
+      const evaluations = await Evaluation.find({ class_id: classId });
+      const studentIds = [...new Set(evaluations.map((eval) => eval.evaluatee))];
+
+      // Fetch detailed student records
+      const students = await User.find({
+        _id: { $in: studentIds },
+        user_type: "student",
+      });
+
+      // Aggregate average ratings and scores for each student
+      const summary = await Promise.all(
+        students.map(async (student) => {
+          const studentEvaluations = evaluations.filter(
+            (eval) => eval.evaluatee.toString() === student._id.toString(),
+          );
+
+          // Calculate average scores for the student
+          const totalScores = studentEvaluations.reduce(
+            (totals, evaluation) => {
+              totals.cooperation += evaluation.cooperation.rating;
+              totals.conceptualContribution += evaluation.conceptual_contribution.rating;
+              totals.practicalContribution += evaluation.practical_contribution.rating;
+              totals.workEthic += evaluation.work_ethic.rating;
+              totals.overallScore += evaluation.average_score;
+              totals.count += 1;
+              return totals;
+            },
+            {
+              cooperation: 0,
+              conceptualContribution: 0,
+              practicalContribution: 0,
+              workEthic: 0,
+              overallScore: 0,
+              count: 0,
+            },
+          );
+
+          const averages = {
             studentName: student.username,
-            averageCooperation: record.averageCooperation.toFixed(1),
-            averageConceptual: record.averageConceptual.toFixed(1),
-            averagePractical: record.averagePractical.toFixed(1),
-            averageWorkEthic: record.averageWorkEthic.toFixed(1),
-            overallAverageScore: record.overallAverageScore.toFixed(1),
+            averageCooperation: (totalScores.cooperation / totalScores.count).toFixed(1),
+            averageConceptual: (totalScores.conceptualContribution / totalScores.count).toFixed(1),
+            averagePractical: (totalScores.practicalContribution / totalScores.count).toFixed(1),
+            averageWorkEthic: (totalScores.workEthic / totalScores.count).toFixed(1),
+            overallAverageScore: (totalScores.overallScore / totalScores.count).toFixed(1),
           };
+
+          return averages;
         }),
       );
-      res.render("assessments_summary", { studentsSummary: populatedSummary });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Server Error");
+
+      res.render("assessments_summary", { studentsSummary: summary, classId });
+    } catch (e) {
+      console.error("Error fetching summary assessments:", e);
+      res.status(500).json({ error: "An error occurred while loading the page." });
     }
   },
 );

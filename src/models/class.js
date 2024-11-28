@@ -2,27 +2,22 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
 
-const TeamSchema = new Schema({
-  team_name: {
+const ClassSchema = new Schema({
+  class_name: {
     type: String,
     required: true,
   },
   instructor_id: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "User", // Reference to the instructor teaching the class
     required: true,
   },
   student_ids: [
     {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User", // References to students in the class
     },
   ],
-  class_id: {
-    type: Schema.Types.ObjectId,
-    ref: "Class", // Reference to the class this team belongs to
-    required: true,
-  },
 });
 
-module.exports = mongoose.model("Team", TeamSchema);
+module.exports = mongoose.model("Class", ClassSchema);

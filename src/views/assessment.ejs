@@ -8,43 +8,43 @@
 </head>
 
 <body>
-<%- include('partials/student_navbar') %>
-<h1>Peer Evaluation</h1>
-<h2>Assessing <%= evaluatee.username %> </h2>
-<form class="assessment" action="/students/<%= currentUser._id %>/assessment/<%= evaluatee._id %>/confirm" method="GET">
-    <div>
-        <label>Cooperation</label> <br>
-        <input type="range" id="cooperation" name="cooperation" min="1" max="5" step="1"> <br>
-        <div class="range-labels">
-            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    <%- include('partials/student_navbar', { classId: classId }) %>
+    <h1>Peer Evaluation</h1>
+    <h2>Assessing <%= evaluatee.username %></h2>
+    <form class="assessment" action="/student/<%= classId %>/assessment/<%= currentUser._id %>/<%= evaluatee._id %>/confirm" method="GET">
+        <div>
+            <label>Cooperation</label> <br>
+            <input type="range" id="cooperation" name="cooperation" min="1" max="5" step="1"> <br>
+            <div class="range-labels">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+            </div>
+            <textarea id="cooperation_feedback" name="cooperation_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
         </div>
-        <textarea id="cooperation_feedback" name="cooperation_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
-    </div>
-    <div>
-        <label>Conceptual Contribution</label> <br>
-        <input type="range" id="conceptual_contribution" name="conceptual_contribution" min="1" max="5" step="1"> <br>
-        <div class="range-labels">
-            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        <div>
+            <label>Conceptual Contribution</label> <br>
+            <input type="range" id="conceptual_contribution" name="conceptual_contribution" min="1" max="5" step="1"> <br>
+            <div class="range-labels">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+            </div>
+            <textarea id="conceptual_feedback" name="conceptual_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
         </div>
-        <textarea id="conceptual_feedback" name="conceptual_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
-    </div>
-    <div>
-        <label>Practical Contribution</label> <br>
-        <input type="range" id="practical_contribution" name="practical_contribution" min="1" max="5" step="1"> <br>
-        <div class="range-labels">
-            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        <div>
+            <label>Practical Contribution</label> <br>
+            <input type="range" id="practical_contribution" name="practical_contribution" min="1" max="5" step="1"> <br>
+            <div class="range-labels">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+            </div>
+            <textarea id="practical_feedback" name="practical_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
         </div>
-        <textarea id="practical_feedback" name="practical_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
-    </div>
-    <div>
-        <label>Work Ethic</label> <br>
-        <input type="range" id="work_ethic" name="work_ethic" min="1" max="5" step="1"> <br>
-        <div class="range-labels">
-            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        <div>
+            <label>Work Ethic</label> <br>
+            <input type="range" id="work_ethic" name="work_ethic" min="1" max="5" step="1"> <br>
+            <div class="range-labels">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+            </div>
+            <textarea id="work_feedback" name="work_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
         </div>
-        <textarea id="work_feedback" name="work_feedback" rows="3" cols="20" placeholder="Explain why you gave this grade"></textarea> <br>
-    </div>
-    <button class="submit-button">Next</button>
-</form>
+        <button class="submit-button">Next</button>
+    </form>
 </body>
 </html>

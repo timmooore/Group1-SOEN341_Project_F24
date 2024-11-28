@@ -3,34 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/instructor_home.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>My Classes</title>
 </head>
 <body>
-<%- include('partials/student_navbar') %>
-<h1>Welcome <%= currentUser.username %>!</h1>
-    
-<h2>Your Teams:</h2>
-
-<section class="team_roster">
-<% if (teams.length > 0) { %>
-  <ul>
-    <% teams.forEach(team => { %>
-      <li>
-        <h2>Team Name: <%= team.team_name %></h2>
-        <p>Team ID: <%= team._id %></p>
-        <p>Number of Students: <%= team.student_ids.length %></p>
-        <form action="/teams/<%= team._id %>" method="GET">
-          <button>View team</button>
-        </form>
-      </li>
-    <% }) %>
-  </ul>
-<% } else { %>
-  <p>You are not a part of any teams</p>
-<% } %>
-</section>
-
+    <div class="container mt-5">
+        <h1>My Classes</h1>
+        <% if (classes.length === 0) { %>
+            <p>You are not currently part of any classes.</p>
+        <% } else { %>
+            <ul class="list-group">
+                <% classes.forEach(classItem => { %>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><strong><%= classItem.class_name %></strong></span>
+                        <button class="btn btn-primary" onclick="location.href='/student/<%= classItem._id %>/index';">View Teams</button>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } %>
+    </div>
 </body>
 </html>
