@@ -12,6 +12,9 @@ The Peer Assessment Application is designed for university team projects, allowi
 5. [Usage Guide](#usage-guide)
 6. [Sprint 1](#sprint-1)
 7. [Sprint 2](#sprint-2)
+8. [Sprint 3](#sprint-3)
+9. [Sprint 4](#sprint-4)
+
 
 <a name="team-members-and-roles"></a>
 ## :superhero: Team Members and Roles
@@ -49,6 +52,89 @@ This project uses the modified Fibonacci scale to assign story points:
 - 3, 5: Small user stories.
 - 8, 13: Medium-complexity user stories that can be accomplished in a single sprint.
 - 20, 40, 100: Large user stories or epics that cannot be accomplished in a single sprint.
+
+### Coding Standards
+
+The following coding standards are enforced in this project to ensure consistency, maintainability, and reliability across the codebase:
+
+---
+
+#### **General JavaScript Best Practices**
+- **Equality Checks**: Use strict equality (`===` and `!==`) to avoid unexpected type coercion.
+  ```javascript
+  // Good
+  if (a === b) { ... }
+
+  // Bad
+  if (a == b) { ... }
+  ```
+ - **Control Structures**: Always use curly braces `{}` for all control statements, even for single-line blocks, to improve readability.
+  ```javascript
+  // Good
+  if (condition) {
+    doSomething();
+  }
+
+  // Bad
+  if (condition) doSomething();
+  ```
+  - **Variable Declarations**: Use `const` for variables that are not reassigned and `let` for variables that need reassignment.
+  ```javascript
+  // Good
+  const value = 42;
+
+  // Bad
+  let value = 42; // Should be const
+  ```
+  ### Coding Standards
+
+The following coding standards are enforced in this project to ensure consistency, maintainability, and reliability across the codebase:
+
+---
+
+#### **Console Logs**
+
+- The use of `console.log()` is allowed for debugging but should be removed in production-ready code.
+
+---
+
+#### **Formatting and Style**
+
+- **Prettier Integration**: All formatting is enforced by Prettier, ensuring consistent:
+  - Indentation (2 spaces).
+  - Line lengths (80 characters).
+  - Use of semicolons.
+  - Spacing around braces, parentheses, and operators.
+- Code that violates Prettier formatting rules will trigger an ESLint error.
+
+---
+
+#### **Naming Conventions**
+
+- **CamelCase**: Variable and function names should follow camelCase by convention. However, this is not strictly enforced, allowing flexibility for legacy or external APIs.
+
+---
+
+#### **Testing Standards**
+
+- **Jest Best Practices**:
+  - Test suites should be organized using `describe` and `it` blocks.
+  - Avoid using `.only` or `.skip` in production test files.
+
+---
+
+#### **Recommended JavaScript Rules**
+
+The following recommended JavaScript rules are enforced:
+
+- **No Unused Variables**: Prevents declaring variables that are never used.
+- **No Undefined Variables**: Ensures variables are defined before use.
+- **Avoid Eval**: Disallows the use of `eval()` for security and readability.
+- **No Redeclaration**: Prevents accidental redeclaration of variables.
+
+---
+
+This project leverages **ESLint** and **Prettier** to enforce these coding standards. Developers are expected to follow these guidelines and update existing code to align with these rules as needed.
 
 <a name="technology-stack"></a>
 ## :package: Technology Stack
@@ -105,6 +191,7 @@ The second sprint focuses on the development of the basic features and interface
 
 The third sprint focuses on implementing view pages for the instructor to view student assessments.
 Moreover, another key area of focus is implementing unit tests to evaluate the functional elements from Sprints 1 and 2.
+
 ### Activities
 
 1. Design and develop instructor interfaces to view student evaluations.
