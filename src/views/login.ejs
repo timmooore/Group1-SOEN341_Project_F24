@@ -24,34 +24,7 @@
         <button>Login</button>
     </form>
 
-    <div class="wrapper">
-        <div class="collapsible">
-            <input type="checkbox" id="collapsible-header">
-            <label for="collapsible-header"> Register Here <i class="fa fa-arrow-right" id="arrow-icon"></i> </label>
-            <div class="collapsible-form">
-                <form action="/register" method="POST">
-                    <div>
-                        <label for="username">Enter username:</label>
-                        <input type="text" name="username" id="username" placeholder="username" required>
-                    </div>
-                    <div>
-                        <label for="password">Enter password:</label>
-                        <input type="password" name="password" id="password" placeholder="password" required>
-                    </div>
-                    <div>
-                        <label for="user_type">Select your role:</label>
-                        <select id="user_type" name="user_type" required>
-                            <option value="" disabled selected>Select your role</option>
-                            <option value="student">Student</option>
-                            <option value="instructor">Instructor</option>
-                        </select>
-                    </div>
-                    <button type="submit">Register</button>
-                </form>
-            </div>
-        </div>
-
-    </div>
+    <a href="/register">Register</a>
 </section>
 </body>
 </html>
