@@ -22,12 +22,16 @@ router.get(
 
       // Ensure the class is linked to the current instructor
       if (!currentClass.instructor_id.equals(req.user._id)) {
-        return res.status(403).send("You are not authorized to view this class.");
+        return res
+          .status(403)
+          .send("You are not authorized to view this class.");
       }
 
       // Fetch unique evaluatees from evaluations for the class
       const evaluations = await Evaluation.find({ class_id: classId });
-      const studentIds = [...new Set(evaluations.map((eval) => eval.evaluatee))];
+      const studentIds = [
+        ...new Set(evaluations.map((evaluation) => evaluation.evaluatee)),
+      ];
 
       // Fetch student details for those evaluatees
       const allStudents = await User.find({
@@ -38,7 +42,9 @@ router.get(
       res.render("instructor_assessments_view", { allStudents, classId });
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: "An error occurred while loading the page." });
+      res
+        .status(500)
+        .json({ error: "An error occurred while loading the page." });
     }
   },
 );
@@ -120,7 +126,6 @@ router.get("/assessments/:classId/:studentId", isLoggedIn, async (req, res) => {
   }
 });
 
-
 //Detailed Assessments
 router.get(
   "/assessments-detailed/:classId",
@@ -138,7 +143,9 @@ router.get(
 
       // Fetch unique evaluatees from evaluations for the class
       const evaluations = await Evaluation.find({ class_id: classId });
-      const studentIds = [...new Set(evaluations.map((eval) => eval.evaluatee))];
+      const studentIds = [
+        ...new Set(evaluations.map((evaluation) => evaluation.evaluatee)),
+      ];
 
       // Fetch student details for those evaluatees
       const students = await User.find({
@@ -150,7 +157,8 @@ router.get(
       const studentsWithEvaluations = await Promise.all(
         students.map(async (student) => {
           const studentEvaluations = evaluations.filter(
-            (eval) => eval.evaluatee.toString() === student._id.toString(),
+            (evaluation) =>
+              evaluation.evaluatee.toString() === student._id.toString(),
           );
           return { student, evaluations: studentEvaluations };
         }),
@@ -181,12 +189,16 @@ router.get(
 
       // Ensure the class is linked to the current instructor
       if (!currentClass.instructor_id.equals(req.user._id)) {
-        return res.status(403).send("You are not authorized to view this class.");
+        return res
+          .status(403)
+          .send("You are not authorized to view this class.");
       }
 
       // Fetch unique evaluatee IDs from evaluations for the class
       const evaluations = await Evaluation.find({ class_id: classId });
-      const studentIds = [...new Set(evaluations.map((eval) => eval.evaluatee))];
+      const studentIds = [
+        ...new Set(evaluations.map((evaluation) => evaluation.evaluatee)),
+      ];
 
       // Fetch detailed student records
       const students = await User.find({
@@ -198,15 +210,18 @@ router.get(
       const summary = await Promise.all(
         students.map(async (student) => {
           const studentEvaluations = evaluations.filter(
-            (eval) => eval.evaluatee.toString() === student._id.toString(),
+            (evaluation) =>
+              evaluation.evaluatee.toString() === student._id.toString(),
           );
 
           // Calculate average scores for the student
           const totalScores = studentEvaluations.reduce(
             (totals, evaluation) => {
               totals.cooperation += evaluation.cooperation.rating;
-              totals.conceptualContribution += evaluation.conceptual_contribution.rating;
-              totals.practicalContribution += evaluation.practical_contribution.rating;
+              totals.conceptualContribution +=
+                evaluation.conceptual_contribution.rating;
+              totals.practicalContribution +=
+                evaluation.practical_contribution.rating;
               totals.workEthic += evaluation.work_ethic.rating;
               totals.overallScore += evaluation.average_score;
               totals.count += 1;
@@ -224,11 +239,21 @@ router.get(
 
           const averages = {
             studentName: student.username,
-            averageCooperation: (totalScores.cooperation / totalScores.count).toFixed(1),
-            averageConceptual: (totalScores.conceptualContribution / totalScores.count).toFixed(1),
-            averagePractical: (totalScores.practicalContribution / totalScores.count).toFixed(1),
-            averageWorkEthic: (totalScores.workEthic / totalScores.count).toFixed(1),
-            overallAverageScore: (totalScores.overallScore / totalScores.count).toFixed(1),
+            averageCooperation: (
+              totalScores.cooperation / totalScores.count
+            ).toFixed(1),
+            averageConceptual: (
+              totalScores.conceptualContribution / totalScores.count
+            ).toFixed(1),
+            averagePractical: (
+              totalScores.practicalContribution / totalScores.count
+            ).toFixed(1),
+            averageWorkEthic: (
+              totalScores.workEthic / totalScores.count
+            ).toFixed(1),
+            overallAverageScore: (
+              totalScores.overallScore / totalScores.count
+            ).toFixed(1),
           };
 
           return averages;
@@ -238,7 +263,9 @@ router.get(
       res.render("assessments_summary", { studentsSummary: summary, classId });
     } catch (e) {
       console.error("Error fetching summary assessments:", e);
-      res.status(500).json({ error: "An error occurred while loading the page." });
+      res
+        .status(500)
+        .json({ error: "An error occurred while loading the page." });
     }
   },
 );

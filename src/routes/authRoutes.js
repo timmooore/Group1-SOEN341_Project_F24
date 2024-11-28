@@ -14,17 +14,23 @@ router.post("/register", async (req, res, next) => {
     const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
       if (err) {
-        req.flash("error", "An error occurred during login after registration.");
+        req.flash(
+          "error",
+          "An error occurred during login after registration.",
+        );
         return next(err);
       }
-      req.flash("success", `Welcome, ${username}! You are successfully registered.`);
+      req.flash(
+        "success",
+        `Welcome, ${username}! You are successfully registered.`,
+      );
       return res.redirect(
         req.user.user_type === "instructor"
           ? "/instructor_index"
-          : "/student_index"
+          : "/student_index",
       );
     });
-  } catch (err) {
+  } catch {
     req.flash("error", "Registration failed. Username might already be taken.");
     res.redirect("/register");
   }
@@ -45,9 +51,9 @@ router.post(
     res.redirect(
       req.user.user_type === "instructor"
         ? "/instructor_index"
-        : "/student_index"
+        : "/student_index",
     );
-  }
+  },
 );
 
 // Handle logout

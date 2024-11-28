@@ -17,9 +17,7 @@ describe("Route Tests", () => {
     expect(response.statusCode).toBe(200);
 
     // Expect response to contain header string
-    expect(response.text).toContain(
-      "Register for the Peer Evaluation Web App!",
-    );
+    expect(response.text).toContain("Sign Up for The Peer Evaluation Web App!");
   });
 
   // test('POST /register with valid user data should redirect', async () => {

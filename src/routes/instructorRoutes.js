@@ -1,41 +1,41 @@
 const express = require("express");
 const { isLoggedIn, isInstructor } = require("../middlewares/middleware");
 const Team = require("../models/team");
-const Class = require('../models/class');
+const Class = require("../models/class");
 const router = express.Router();
 
 // Display the class creation form
-router.get('/instructor/classes/new', isInstructor, (req, res) => {
-  res.render('new-class');
+router.get("/instructor/classes/new", isInstructor, (req, res) => {
+  res.render("new-class");
 });
 
 // Create a new class
-router.post('/instructor/classes/new', isInstructor, async (req, res) => {
+router.post("/instructor/classes/new", isInstructor, async (req, res) => {
   try {
-      const { class_name } = req.body;
+    const { class_name } = req.body;
 
-      // Create the new class
-      const newClass = new Class({
-          class_name,
-          instructor_id: req.user._id,
-      });
-      await newClass.save();
+    // Create the new class
+    const newClass = new Class({
+      class_name,
+      instructor_id: req.user._id,
+    });
+    await newClass.save();
 
-      res.redirect('/instructor_index'); // Redirect to the list of classes
+    res.redirect("/instructor_index"); // Redirect to the list of classes
   } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
 // Display the list of all classes
-router.get('/instructor_index', isLoggedIn, isInstructor, async (req, res) => {
+router.get("/instructor_index", isLoggedIn, isInstructor, async (req, res) => {
   try {
-      const classes = await Class.find({ instructor_id: req.user._id });
-      res.render('classes', { classes });
+    const classes = await Class.find({ instructor_id: req.user._id });
+    res.render("classes", { classes });
   } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 

@@ -10,57 +10,84 @@ router.get("/student_index", isLoggedIn, isStudent, async (req, res) => {
   try {
     // Find all classes where the student is part of at least one team
     const classes = await Class.find({
-      _id: { $in: (await Team.find({ student_ids: req.user._id }).distinct("class_id")) },
+      _id: {
+        $in: await Team.find({ student_ids: req.user._id }).distinct(
+          "class_id",
+        ),
+      },
     });
 
     res.render("student_index", { classes });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: "An error occurred while fetching your classes." });
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching your classes." });
   }
 });
 
 // Student index page to view all teams they are part of in a class
-router.get("/student/:classId/index", isLoggedIn, isStudent, async (req, res) => {
-  try {
-    const { classId } = req.params;
+router.get(
+  "/student/:classId/index",
+  isLoggedIn,
+  isStudent,
+  async (req, res) => {
+    try {
+      const { classId } = req.params;
 
-    // Validate the class exists
-    const currentClass = await Class.findById(classId);
-    if (!currentClass) {
-      return res.status(404).json({ error: "Class not found" });
+      // Validate the class exists
+      const currentClass = await Class.findById(classId);
+      if (!currentClass) {
+        return res.status(404).json({ error: "Class not found" });
+      }
+
+      // Fetch teams the student is part of within this class
+      const teams = await Team.find({
+        class_id: classId,
+        student_ids: req.user._id,
+      });
+
+      res.render("student_class_teams", {
+        teams,
+        classId,
+        currentUser: req.user,
+      });
+    } catch (e) {
+      console.error(e);
+      res
+        .status(500)
+        .json({ error: "An error occurred while fetching your teams." });
     }
-
-    // Fetch teams the student is part of within this class
-    const teams = await Team.find({ class_id: classId, student_ids: req.user._id });
-
-    res.render("student_class_teams", { teams, classId, currentUser: req.user });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "An error occurred while fetching your teams." });
-  }
-});
-
+  },
+);
 
 // Route for students to manage teams in a specific class
-router.get("/student/:classId/team_management", isLoggedIn, isStudent, async (req, res) => {
-  try {
-    const { classId } = req.params;
+router.get(
+  "/student/:classId/team_management",
+  isLoggedIn,
+  isStudent,
+  async (req, res) => {
+    try {
+      const { classId } = req.params;
 
-    // Validate the class exists
-    const currentClass = await Class.findById(classId);
-    if (!currentClass) {
-      return res.status(404).json({ error: "Class not found" });
+      // Validate the class exists
+      const currentClass = await Class.findById(classId);
+      if (!currentClass) {
+        return res.status(404).json({ error: "Class not found" });
+      }
+
+      // Fetch teams the student is part of within this class
+      const teams = await Team.find({
+        class_id: classId,
+        student_ids: req.user._id,
+      });
+
+      res.render("student_team_management", { teams, classId });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
     }
-
-    // Fetch teams the student is part of within this class
-    const teams = await Team.find({ class_id: classId, student_ids: req.user._id });
-
-    res.render("student_team_management", { teams, classId });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
+  },
+);
 
 // Route to render the assessment page for a student
 router.get(
@@ -82,7 +109,7 @@ router.get(
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
-  }
+  },
 );
 
 // Route to submit an assessment
@@ -135,9 +162,11 @@ router.post(
       res.redirect(`/student/${classId}/index`);
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: "An error occurred while submitting the assessment." });
+      res
+        .status(500)
+        .json({ error: "An error occurred while submitting the assessment." });
     }
-  }
+  },
 );
 
 // Route to confirm an assessment
@@ -172,7 +201,7 @@ router.get(
       work_feedback,
       classId,
     });
-  }
+  },
 );
 
 module.exports = router;

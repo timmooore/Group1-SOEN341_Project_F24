@@ -3,7 +3,7 @@ const path = require("path");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const session = require("express-session");
-const flash = require('connect-flash');
+const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
@@ -59,8 +59,8 @@ app.use((req, res, next) => {
   //Note that res.locals is meant for data passed to the "views" folder. It's not automatically
   // available in all routes!
   res.locals.currentUser = req.user;
-    res.locals.success = req.flash('success'); //Flashes a message if the req succeeds (The specific messages are set up in the routes)
-    res.locals.error = req.flash('error'); //Flashes a message if the req fails (The specific messages are set up in the routes)
+  res.locals.success = req.flash("success"); //Flashes a message if the req succeeds (The specific messages are set up in the routes)
+  res.locals.error = req.flash("error"); //Flashes a message if the req fails (The specific messages are set up in the routes)
   next();
 });
 
