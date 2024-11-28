@@ -120,7 +120,6 @@ The following coding standards are enforced in this project to ensure consistenc
 - **Jest Best Practices**:
   - Test suites should be organized using `describe` and `it` blocks.
   - Avoid using `.only` or `.skip` in production test files.
-- These rules ensure a consistent, reliable testing setup.
 
 ---
 
