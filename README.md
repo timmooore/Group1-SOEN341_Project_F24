@@ -67,7 +67,7 @@ The following coding standards are enforced in this project to ensure consistenc
 
   // Bad
   if (a == b) { ... }
- ```
+  ```
  - **Control Structures**: Always use curly braces `{}` for all control statements, even for single-line blocks, to improve readability.
   ```javascript
   // Good
@@ -78,7 +78,64 @@ The following coding standards are enforced in this project to ensure consistenc
   // Bad
   if (condition) doSomething();
   ```
-  
+  - **Variable Declarations**: Use `const` for variables that are not reassigned and `let` for variables that need reassignment.
+  ```javascript
+  // Good
+  const value = 42;
+
+  // Bad
+  let value = 42; // Should be const
+  ```
+  ### Coding Standards
+
+The following coding standards are enforced in this project to ensure consistency, maintainability, and reliability across the codebase:
+
+---
+
+#### **Console Logs**
+
+- The use of `console.log()` is allowed for debugging but should be removed in production-ready code.
+
+---
+
+#### **Formatting and Style**
+
+- **Prettier Integration**: All formatting is enforced by Prettier, ensuring consistent:
+  - Indentation (2 spaces).
+  - Line lengths (80 characters).
+  - Use of semicolons.
+  - Spacing around braces, parentheses, and operators.
+- Code that violates Prettier formatting rules will trigger an ESLint error.
+
+---
+
+#### **Naming Conventions**
+
+- **CamelCase**: Variable and function names should follow camelCase by convention. However, this is not strictly enforced, allowing flexibility for legacy or external APIs.
+
+---
+
+#### **Testing Standards**
+
+- **Jest Best Practices**:
+  - Test suites should be organized using `describe` and `it` blocks.
+  - Avoid using `.only` or `.skip` in production test files.
+- These rules ensure a consistent, reliable testing setup.
+
+---
+
+#### **Recommended JavaScript Rules**
+
+The following recommended JavaScript rules are enforced:
+
+- **No Unused Variables**: Prevents declaring variables that are never used.
+- **No Undefined Variables**: Ensures variables are defined before use.
+- **Avoid Eval**: Disallows the use of `eval()` for security and readability.
+- **No Redeclaration**: Prevents accidental redeclaration of variables.
+
+---
+
+This project leverages **ESLint** and **Prettier** to enforce these coding standards. Developers are expected to follow these guidelines and update existing code to align with these rules as needed.
 
 <a name="technology-stack"></a>
 ## :package: Technology Stack
