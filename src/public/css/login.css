@@ -1,4 +1,7 @@
-body {
+body{
+    background: #f4f4f4;
+}
+.main-section {
     width: 700px;
     font-family: Arial, sans-serif;
     margin: 0 auto;

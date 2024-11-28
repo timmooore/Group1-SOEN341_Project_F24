@@ -1,0 +1,58 @@
+/* Main section styles */
+.main-section {
+    max-width: 600px;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 40px;
+}
+
+.main-section h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Styles for the list */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.current-team-student {
+    background-color: #ecf0f1;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+
+
+.current-team-student form {
+    margin: 0;
+}
+
+.current-team-student button {
+    background-color: #8a0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.current-team-student button:hover {
+    background-color: #9a0000;
+}
+
+.current-team-student button:active {
+    background-color: #5a0000;
+}

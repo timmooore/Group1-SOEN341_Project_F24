@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/public/css/generate_teams.css">
+    <link rel="stylesheet" href="/css/generate_teams.css">
     <link rel="stylesheet" href="/css/instructor_navbar.css">
     <title>Team Management</title>
 </head>
 
 <body>
     <%- include("partials/instructor_navbar") %>
+    <section class="generate-teams">
     <h1>Generate Teams</h1>
-    <hr>
     <form action="/generate-teams" method="POST" enctype="multipart/form-data">
         <label for="teamSize">Choose team size:</label>
         <select id="teamSize" name="teamSize" required>
@@ -25,6 +25,7 @@
     
         <button type="submit">Generate Teams</button>
     </form>
+    </section>
 
 </body>
 </html>

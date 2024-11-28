@@ -11,8 +11,9 @@
 <%- include('partials/student_navbar') %>
 <h1>Welcome <%= currentUser.username %>!</h1>
     
-<h2>Teams you're apart of:</h2>
+<h2>Your Teams:</h2>
 
+<section class="team_roster">
 <% if (teams.length > 0) { %>
   <ul>
     <% teams.forEach(team => { %>
@@ -27,8 +28,9 @@
     <% }) %>
   </ul>
 <% } else { %>
-  <p>You are not apart of any teams currently.</p>
+  <p>You are not a part of any teams</p>
 <% } %>
+</section>
 
 </body>
 </html>

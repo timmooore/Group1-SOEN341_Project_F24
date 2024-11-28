@@ -1,0 +1,117 @@
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: BLACK;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.card {
+    border: 2px solid #8a0000;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.card-body {
+    background-color: white;
+}
+
+table.table {
+    background-color: #8a0000;
+    border: 1px solid #8a0000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table thead th {
+    background-color: #8a0000;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    border: none;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: white;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 10px 0 10px ;
+    border: none;
+}
+
+button.btn-primary {
+    background-color: #8a0000;
+    border-color: #6b0000;
+    color: white;
+}
+
+button.btn-primary:focus,
+button.btn-primary:active,
+button.btn-primary:focus-visible {
+    background-color: #8a0000 !important;
+    border-color: #6b0000 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+button.btn-primary{
+
+}
+
+button.btn-primary:hover {
+    background-color: #6b0000;
+    border-color: #4d0000;
+}
+
+.collapse .card {
+    background-color: white;
+    padding: 5px;
+
+}
+
+.collapse table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.collapse table td {
+    padding: 8px;
+
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    table thead th,
+    table tbody td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+
+
