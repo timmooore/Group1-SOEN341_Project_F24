@@ -1,0 +1,1 @@
+**NOTE:** sprint-planning is deprecated. After Sprint 1, all project management handled exclusively on GitHub through Issues and Projects at: https://github.com/users/SacciadisG/projects/1/views/1
